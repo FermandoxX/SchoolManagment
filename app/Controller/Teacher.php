@@ -40,7 +40,7 @@ class Teacher {
 
         if(isStudent()){
             $query = 'inner join subjects s on u.user_id = s.teacher_id';
-            $condition = ['s.class_id'=>12];
+            $condition = ['s.class_id'=>getUserData('class_id')];
         }
 
         $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query);

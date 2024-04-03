@@ -10,7 +10,7 @@ class Model extends Validation{
     public $primaryKey = 'user_id';
     private $pdo;
     private $statement;
-    protected $join = false;
+    public $join;
 
     public function __construct(){
         $dsn = "mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=UTF8";
@@ -66,6 +66,10 @@ class Model extends Validation{
 
         if($query != null){
             $sql .= " $query ";
+        }
+
+        if($this->join != null){
+            $sql .= " $this->join ";
         }
 
         if(!empty($data)){
