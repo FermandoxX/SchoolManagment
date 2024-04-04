@@ -10,7 +10,6 @@ class Main {
     public function __construct(UserModel $userModel)
     {
         $this->userModel = $userModel;
-
     }
 
     public function index(){
@@ -20,54 +19,19 @@ class Main {
 
         $this->userModel->join = 'inner join classes c on c.class_id = u.class_id';
         $students = $this->userModel->getData();
-        $classesData = [];
-
-        foreach ($students as $student) {
-            $className = $student->class_name;
-            if (isset($classesData[$className])) {
-                $classesData[$className]++;
-            } else {
-                $classesData[$className] = 1;
-            }
-        }
+        $classesData = $this->getDataForObjectByName($students,'class_name');
 
         $this->userModel->join = 'inner join attendance a on a.student_id = u.user_id
         inner join classes c on c.class_id = u.class_id';
         $students = $this->userModel->getData();
-        $attendancesData = [];
+        $attendancesData = $this->getDataForObjectByName($students,'class_name');
         
-        foreach ($students as $student) {
-            $className = $student->class_name;
-            if (isset($attendancesData[$className])) {
-                $attendancesData[$className]++;
-            } else {
-                $attendancesData[$className] = 1;
-            }
-        }
-
+        $this->userModel->join = null;
         $teachersData = $this->userModel->getData(['role_name'=>'teacher']);
-        $teachersDate = [];
+        $teachersDate = $this->getDataForObjectByName($teachersData,'create_at');
 
         $studentsData = $this->userModel->getData(['role_name'=>'student']);
-        $studentsDate = [];
-
-        foreach ($teachersData as $teacherData) {
-            $createdDate = date("Y", strtotime($teacherData->create_at));
-            if (isset($teachersDate[$createdDate])) {
-                $teachersDate[$createdDate]++;
-            } else {
-                $teachersDate[$createdDate] = 1;
-            }
-        }
-
-        foreach ($studentsData as $studentData) {
-            $createdDate =  date("Y", strtotime($studentData->create_at));
-            if (isset($studentsDate[$createdDate])) {
-                $studentsDate[$createdDate]++;
-            } else {
-                $studentsDate[$createdDate] = 1;
-            }
-        }
+        $studentsDate = $this->getDataForObjectByName($studentsData,'create_at');
 
         ksort($teachersDate);
         ksort($studentsDate);
@@ -76,5 +40,26 @@ class Main {
         $studentsDate = array_values($studentsDate);
 
         return view('main',['adminNumber'=>$adminNumber,'teacherNumber'=>$teacherNumber,'studentNumber'=>$studentNumber,'classesData'=>$classesData,'attendancesData'=>$attendancesData,'teachersCreateDate'=>$teachersDate,'studentsCreateDate'=>$studentsDate]);
+    }
+
+    public function  getDataForObjectByName($array,$objName){        
+        $data = [];
+        $pattern = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
+
+        foreach ($array as $value) {
+            $valueData = $value->$objName;
+
+            if(preg_match($pattern, $valueData)){
+                $valueData =  date("Y", strtotime($value->$objName));
+            }
+
+            if (isset($data[$valueData])) {
+                $data[$valueData]++;
+            } else {
+                $data[$valueData] = 1;
+            }
+        }
+
+        return $data;
     }
 }

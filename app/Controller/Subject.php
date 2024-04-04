@@ -37,8 +37,6 @@ class Subject {
         $offset = 0;
         $pattern = [];
         $condition = [];
-        $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
-        left join users u on s.teacher_id = u.user_id';
 
         if(isset($data['search'])){
             $pattern['subject_name'] = $data['search'];
@@ -47,8 +45,12 @@ class Subject {
         if(isStudent()){
             $condition['s.class_id'] = getUserData('class_id');
         }
-
+        $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
+        left join users u on s.teacher_id = u.user_id';
         $pageSum = $this->subjectModel->pages($condition,$rowPerPage,$pattern);
+
+        $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
+        left join users u on s.teacher_id = u.user_id';
         $subjectData = $this->subjectModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
 
         return view('subject/subject',['pages'=>$pageSum,'subjectsData'=>$subjectData, 'data'=>$data]);

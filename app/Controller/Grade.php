@@ -166,6 +166,7 @@ class Grade {
     }
 
     public function insert(){
+
         $data = $this->request->getBody();
         $getRules = $this->gradeModel->gradesRule();
         $this->subjectModel->join = 'inner join classes c on c.class_id = s.class_id

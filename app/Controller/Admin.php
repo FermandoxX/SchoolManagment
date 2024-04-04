@@ -35,6 +35,7 @@ class Admin{
 
         $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern);
         $userData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
+        $this->userModel->join = 'test';
         return view('admin/admin',['pages'=>$pageSum,'usersData'=>$userData, 'data' => $data]);
     }
 

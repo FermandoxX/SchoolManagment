@@ -129,7 +129,6 @@ class Attendance {
 
     public function addAttendance(){
         $data = $this->request->getBody();
-
         if(isTeacher()){
             $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
 
