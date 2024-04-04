@@ -33,7 +33,6 @@ class Attendance {
         $offset = 0;
         $pattern = [];
         $condition = [];
-        $query = null;
 
         if(isset($data['search'])){
             $pattern['subject_name'] = $data['search'];
@@ -44,19 +43,19 @@ class Attendance {
         }
         
         if(isStudent()){
-            $query = 'inner join users u on s.class_id = u.class_id';
+            $this->subjectModel->join = 'inner join users u on s.class_id = u.class_id';
             $condition['user_id'] = getUserId();
         }
 
-        $pageSum = $this->subjectModel->pages($condition,$rowPerPage,$pattern,$query);
-        $subjectsData = $this->subjectModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query);
+        $pageSum = $this->subjectModel->pages($condition,$rowPerPage,$pattern);
+        $subjectsData = $this->subjectModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
 
         return view('attendance/attendance',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data]);
     }
 
     public function attendanceSubject(){
         $data = $this->request->getBody();
-        $query = 'inner join subjects s on u.class_id = s.class_id';
+        $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
         $year = date('Y') - 2;
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -80,7 +79,7 @@ class Attendance {
             }
         }
 
-        $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false,$query);
+        $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false);
       
         return view('attendance/attendance_subject',['studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'data'=>$data]);
     }
@@ -93,9 +92,7 @@ class Attendance {
         $formattedDate = date('Y-m', $date);
         
         $attendanceCondition = ['subject_id'=>$data['subject_id']];
-        $attendancesQuery = 'inner join users u on u.user_id = a.student_id';
         $attendancesStudent = [];
-        $studentsQuery = 'inner join subjects s on u.class_id = s.class_id';
         $year = date('Y') - 2;
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         $getRules = $this->attendanceModel->attendanceRules();
@@ -108,7 +105,8 @@ class Attendance {
             $attendanceCondition['student_id'] = getUserId();
         }
 
-        $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false,$studentsQuery);
+        $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
+        $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false);
 
         if($this->validation->validate($data,$getRules)){
             $days = [];
@@ -118,7 +116,8 @@ class Attendance {
                 $days[]=$i;
             }
 
-            $attendancesData = $this->attendanceModel->getData($attendanceCondition,['attendance_date'=>$formattedDate],[],false,$attendancesQuery);
+            $this->attendanceModel->join = 'inner join users u on u.user_id = a.student_id';
+            $attendancesData = $this->attendanceModel->getData($attendanceCondition,['attendance_date'=>$formattedDate],[],false);
             foreach($attendancesData as $attendanceData){
                 $attendancesStudent[$attendanceData->name.' '.$attendanceData->surename][] = (int)date("d", strtotime($attendanceData->attendance_date));
             }
@@ -141,8 +140,8 @@ class Attendance {
             }
         }
 
-        $query = 'inner join subjects s on u.class_id = s.class_id';
-        $studentsData = $this->userModel->getData(['subject_id'=>$data['subject_id']],[],[],false,$query);
+        $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
+        $studentsData = $this->userModel->getData(['subject_id'=>$data['subject_id']],[],[],false);
 
         return view('attendance/attendance_add',['data'=>$data,'studentsData'=>$studentsData]);
     }
@@ -150,8 +149,8 @@ class Attendance {
     public function insertAttendance(){
         $data = $this->request->getBody();
         $getRules = $this->attendanceModel->attendanceRules();
-        $query = 'inner join subjects s on u.class_id = s.class_id';
-        $studentsData = $this->userModel->getData(['subject_id'=>$data['subject_id']],[],[],false,$query);
+        $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
+        $studentsData = $this->userModel->getData(['subject_id'=>$data['subject_id']],[],[],false);
 
         if(!isset($data['checkbox'])){
             setFlashMessage('error','Choose a student to add a attendance');
@@ -188,7 +187,7 @@ class Attendance {
         $data = $this->request->getBody();
         $rowPerPage = 5;
         $offset = 0;
-        $query = 'inner join users u on u.user_id = a.student_id';
+        $this->attendanceModel->join = 'inner join users u on u.user_id = a.student_id';
         $condition = ['subject_id'=>$data['subject_id']];
         $pattern = [];
 
@@ -208,8 +207,8 @@ class Attendance {
             $pattern['attendance_date'] = $data['search'];
         }
 
-        $pageSum = $this->attendanceModel->pages($condition,$rowPerPage,$pattern,$query);
-        $attendancesData = $this->attendanceModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query);
+        $pageSum = $this->attendanceModel->pages($condition,$rowPerPage,$pattern);
+        $attendancesData = $this->attendanceModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
 
         return view('attendance/attendance_remove',['pages'=>$pageSum,'attendancesData'=>$attendancesData,'data'=>$data]);
     }

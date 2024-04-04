@@ -37,7 +37,7 @@ class Grade {
         $rowPerPage = 5;
         $offset = 0;
         $pattern = [];
-        $query = 'inner join classes c on u.class_id = c.class_id';
+        $this->userModel->join = 'inner join classes c on u.class_id = c.class_id';
         
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
@@ -52,12 +52,12 @@ class Grade {
                 exit;
             }
 
-            $query .= ' inner join subjects s on s.class_id = u.class_id';
+            $this->userModel->join .= ' inner join subjects s on s.class_id = u.class_id';
             $condition['subject_id'] = $data['subject_id'];
         }
 
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query);
-        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query);
+        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern);
+        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
 
         return view('grade/grade',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
     }
@@ -67,7 +67,7 @@ class Grade {
         $rowPerPage = 3;
         $offset = 0;
         $pattern = [];
-        $query = 'inner join subjects s on s.class_id = u.class_id';
+        $this->userModel->join = 'inner join subjects s on s.class_id = u.class_id';
         if(isset($data['student_id'])){
             $condition = ['user_id'=>$data['student_id']];
         }
@@ -91,12 +91,12 @@ class Grade {
                 exit;
             }
 
-            $query = 'inner join subjects s on s.teacher_id = u.user_id';
+            $this->userModel->join = 'inner join subjects s on s.teacher_id = u.user_id';
             $condition = ['user_id'=>$data['teacher_id']];
         }
 
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query);
-        $subjectsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query);
+        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern);
+        $subjectsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
 // dd($subjectsData);
         // if(!$subjectsData){
         //     setFlashMessage('error','Student dont exist');
@@ -113,8 +113,8 @@ class Grade {
 
     public function add(){
         $data = $this->request->getBody();
-        $gradeQuery = 'inner join subjects s on g.subject_id = s.subject_id';
-        $query = 'inner join classes c on c.class_id = s.class_id
+        $this->gradeModel->join = 'inner join subjects s on g.subject_id = s.subject_id';
+        $this->subjectModel->join = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
         $gradeCondition = isset($data['subject_id']) ? ['student_id'=>$data['student_id'],'s.subject_id'=>$data['subject_id']] : [];
         $subjectCondition = isset($data['subject_id']) ? ['s.subject_id'=>$data['subject_id']] : [];
@@ -159,8 +159,8 @@ class Grade {
             }
         }
 
-        $gradeData = $this->gradeModel->getData($gradeCondition,[],[],false,$gradeQuery);
-        $subjectData = $this->subjectModel->getData($subjectCondition,[],[],false,$query);
+        $gradeData = $this->gradeModel->getData($gradeCondition,[],[],false);
+        $subjectData = $this->subjectModel->getData($subjectCondition,[],[],false);
 
         return view('grade/grade_add',['gradeData'=>$gradeData,'subjectData'=>$subjectData,'data'=>$data]);
     }
@@ -168,7 +168,7 @@ class Grade {
     public function insert(){
         $data = $this->request->getBody();
         $getRules = $this->gradeModel->gradesRule();
-        $query = 'inner join classes c on c.class_id = s.class_id
+        $this->subjectModel->join = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
         $studentId = $data['student_id'];
 
@@ -209,7 +209,7 @@ class Grade {
         }
         
         $gradeData = $this->gradeModel->getData(['student_id'=>$data['student_id'],'subject_id'=>$data['subject_id']]);
-        $subjectData = $this->subjectModel->getData(['subject_id'=>$data['subject_id']],[],[],false,$query);
+        $subjectData = $this->subjectModel->getData(['subject_id'=>$data['subject_id']],[],[],false);
 
         return view('grade/grade_add',['gradeData'=>$gradeData,'subjectData'=>$subjectData,'data'=>$data,'validation'=>$this->validation]);
     }

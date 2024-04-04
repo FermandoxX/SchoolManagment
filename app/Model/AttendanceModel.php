@@ -31,21 +31,21 @@ class AttendanceModel extends Model {
       return ['value'=>true];
     }
 
-    public function pages($condition = [],$rowsPerPage,$pattern,$query){
+    public function pages($condition = [],$rowsPerPage,$pattern){
 
-      $numberOfRows = count($this->getData($condition,$pattern,[],false,$query));
+      $numberOfRows = count($this->getData($condition,$pattern));
 
       $pages = ceil($numberOfRows/$rowsPerPage);
       return $pages;
     }
   
-    public function pagination($condition = [],$limit,$offset,$pattern,$requestData,$query){
+    public function pagination($condition = [],$limit,$offset,$pattern,$requestData){
         if(isset($requestData['pageNr'])){
             $page = $requestData['pageNr'] - 1;
             $offset = $page * $limit;
         }
 
-        $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset],false,$query);
+        $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset]);
         return $data;
     }
 }

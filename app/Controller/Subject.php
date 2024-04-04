@@ -65,10 +65,10 @@ class Subject {
     public function edit(){
         
         $data = $this->request->getBody();
-        $query = 'left join classes c on c.class_id = s.class_id
+        $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
         left join users u on s.teacher_id = u.user_id';
 
-        $subjectData = $this->subjectModel->getData(['subject_id'=>$data['id']],[],[],false,$query);
+        $subjectData = $this->subjectModel->getData(['subject_id'=>$data['id']],[],[],false);
         $teachersData = $this->userModel->getData(['role_name'=>'teacher']);
 
         if(!$subjectData){
@@ -111,7 +111,7 @@ class Subject {
         $getRules = $this->subjectModel->subjectRulesUpdate();
         $image = $subjectData['subject_image'];
         $subjectId = $subjectData['subject_id'];
-        $query = 'left join classes c on c.class_id = s.class_id
+        $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
         left join users u on s.teacher_id = u.user_id';
 
         if($this->validation->validate($subjectData,$getRules)){
@@ -137,7 +137,7 @@ class Subject {
         }
 
         $classesData = $this->classModel->getData();           
-        $subjectData = $this->subjectModel->getData(['subject_id'=>$subjectData['subject_id']],[],[],false,$query);
+        $subjectData = $this->subjectModel->getData(['subject_id'=>$subjectData['subject_id']],[],[],false);
 
         return view('subject/subject_update',['validation'=>$this->validation,'classesData'=>$classesData,'subjectData'=>$subjectData]);
     }

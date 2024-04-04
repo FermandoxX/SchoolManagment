@@ -17,8 +17,8 @@ class ClassModel extends Model {
 
     public function teacherClasses(){
       $classId = [];
-      $query = 'inner join subjects s on s.class_id = c.class_id';
-      $classes = $this->getData(['teacher_id'=>getUserId()],[],[],false,$query);
+      $this->join = 'inner join subjects s on s.class_id = c.class_id';
+      $classes = $this->getData(['teacher_id'=>getUserId()]);
 
       foreach($classes as $class){
         $classId[] = $class->class_id;

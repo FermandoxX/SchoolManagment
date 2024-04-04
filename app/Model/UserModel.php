@@ -76,21 +76,21 @@ class UserModel extends Model{
       return true;
     }
 
-    public function pages($condition = [],$rowsPerPage,$pattern,$query = null,$distinct = []){
-      $numberOfRows = count($this->getData($condition,$pattern,[],false,$query,$distinct));
+    public function pages($condition = [],$rowsPerPage,$pattern,$distinct = []){
+      $numberOfRows = count($this->getData($condition,$pattern,[],$distinct));
 
       $pages = ceil($numberOfRows/$rowsPerPage);
 
       return $pages;
     }
 
-    public function pagination($condition,$limit,$offset,$pattern,$requestData,$query = null,$distinct = []){
+    public function pagination($condition,$limit,$offset,$pattern,$requestData,$distinct = []){
       if(isset($requestData['pageNr'])){
           $page = $requestData['pageNr'] - 1;
           $offset = $page * $limit;
       }
 
-      $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset],false,$query,$distinct);
+      $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset],$distinct);
       return $data;
     }
 

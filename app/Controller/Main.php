@@ -18,7 +18,8 @@ class Main {
         $teacherNumber = count($this->userModel->getData(['role_name'=>'teacher']));
         $studentNumber = count($this->userModel->getData(['role_name'=>'student']));
 
-        $students = $this->userModel->getData([],[],[],false,'inner join classes c on c.class_id = u.class_id');
+        $this->userModel->join = 'inner join classes c on c.class_id = u.class_id';
+        $students = $this->userModel->getData();
         $classesData = [];
 
         foreach ($students as $student) {
@@ -30,8 +31,9 @@ class Main {
             }
         }
 
-        $students = $this->userModel->getData([],[],[],false,'inner join attendance a on a.student_id = u.user_id
-        inner join classes c on c.class_id = u.class_id');
+        $this->userModel->join = 'inner join attendance a on a.student_id = u.user_id
+        inner join classes c on c.class_id = u.class_id';
+        $students = $this->userModel->getData();
         $attendancesData = [];
         
         foreach ($students as $student) {

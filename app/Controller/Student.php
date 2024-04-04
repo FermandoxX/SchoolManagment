@@ -29,7 +29,6 @@ class Student{
         $rowPerPage = 5;
         $offset = 0;
         $pattern = [];
-        $query = null;
         $distinct = [];
 
         if(isset($data['search'])){
@@ -37,15 +36,13 @@ class Student{
         }
 
         if(isTeacher()){
-            $query = 'inner join subjects s on s.class_id = u.class_id';
+            $this->userModel->join = 'inner join subjects s on s.class_id = u.class_id';
             $condition['teacher_id'] = getUserId();
             $distinct = ['user_id', 'name', 'email', 'password', 'phone_number', 'role_name', 'address', 'image', 'surename'];
         }
 
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query,$distinct);
-        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query,$distinct);
-
-        // dd((array)$studentsData);
+        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,null,$distinct);
+        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,null,$distinct);
 
         return view('student/student',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
     }

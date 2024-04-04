@@ -29,20 +29,20 @@ class SubjectModel extends Model{
     }
 
 
-    public function pages($condition = [],$rowsPerPage,$pattern,$query = null){
-        $numberOfRows = count($this->getData($condition,$pattern,[],false,$query));
+    public function pages($condition = [],$rowsPerPage,$pattern){
+        $numberOfRows = count($this->getData($condition,$pattern));
         
         $pages = ceil($numberOfRows/$rowsPerPage);
         return $pages;
     }
   
-    public function pagination($condition = [],$limit,$offset,$pattern,$requestData,$query = null){
+    public function pagination($condition = [],$limit,$offset,$pattern,$requestData){
         if(isset($requestData['pageNr'])){
             $page = $requestData['pageNr'] - 1;
             $offset = $page * $limit;
         }
 
-        $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset],false,$query);
+        $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset]);
         return $data;
     }
 
@@ -59,9 +59,9 @@ class SubjectModel extends Model{
 
     public function teacherStudentsId($teacherId,$subject_id){
         $studentsId = [];
-        $query = 'inner join users u on u.class_id = s.class_id';
+        $this->join = 'inner join users u on u.class_id = s.class_id';
 
-        $teacherStudents = $this->getData(['teacher_id'=>$teacherId,'subject_id'=>$subject_id],[],[],false,$query);
+        $teacherStudents = $this->getData(['teacher_id'=>$teacherId,'subject_id'=>$subject_id]);
 
         foreach($teacherStudents as $teacherStudent){
             $studentsId[] = $teacherStudent->user_id;
@@ -74,9 +74,9 @@ class SubjectModel extends Model{
 
     public function studentSubjectsId($studentId){
         $studentsId = [];
-        $query = 'inner join users u on u.class_id = s.class_id';
+        $this->join = 'inner join users u on u.class_id = s.class_id';
 
-        $studentSubjects = $this->getData(['user_id'=>$studentId],[],[],false,$query);
+        $studentSubjects = $this->getData(['user_id'=>$studentId]);
 
         foreach($studentSubjects as $studentSubject){
             $studentsId[] = $studentSubject->subject_id;
