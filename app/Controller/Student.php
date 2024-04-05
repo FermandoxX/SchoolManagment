@@ -26,23 +26,15 @@ class Student{
     public function index(){
         $data = $this->request->getBody();
         $condition = ['role_name'=>'student'];
-        $rowPerPage = 5;
-        $offset = 0;
         $pattern = [];
-        $distinct = [];
+
 
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
         }
 
-        if(isTeacher()){
-            $this->userModel->join = 'inner join subjects s on s.class_id = u.class_id';
-            $condition['teacher_id'] = getUserId();
-            $distinct = ['user_id', 'name', 'email', 'password', 'phone_number', 'role_name', 'address', 'image', 'surename'];
-        }
-
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,null,$distinct);
-        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,null,$distinct);
+        $pageSum = $this->userModel->pages($condition,$pattern);
+        $studentsData = $this->userModel->pagination($condition,$pattern,$data);
 
         return view('student/student',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
     }
@@ -111,7 +103,6 @@ class Student{
         $getRules = $this->userModel->profileUpdateRules();
         $userId = $data['userId'];
         $image = $data['image'];
-        $classId = $data['class_id'];
 
         if($this->validation->validate($data,$getRules,$this->userModel,$userId)){
             unset($data['image']);
@@ -122,10 +113,6 @@ class Student{
                 $data['image'] = $image['name'];
             }
 
-            if($classId == ""){
-                unset($data['class_id']);
-            }
-
             $this->userModel->updateDataById($userId,$data);
 
             setFlashMessage('success','Student updated successfully');
@@ -134,7 +121,7 @@ class Student{
         }
 
         $studentData = $this->userModel->getDataById($userId);
-        $classesData = $this->classModel->getData([]);
+        $classesData = $this->classModel->getData();
         return view('student/student_profile',['validation'=>$this->validation,'studentData'=>$studentData,'classesData'=>$classesData]);
     }
 

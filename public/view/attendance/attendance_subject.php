@@ -10,9 +10,9 @@
             <div class="card-body">
               <div class="d-flex">
                 <h3 class="mt-3 mr-5 card-title col-7">Attendance</h3>
-                <?php if(isTeacher() || isAdmin()): ?>
-                <a class="createButton btn btn-primary text-white mt-4 col-2" href="/attendance/remove?subject_id=<?=$data['subject_id']?>"  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;">Delete Attendance</a>
-                <a class="createButton btn btn-primary text-white mt-4 col-2" href="/attendance/add?subject_id=<?=$data['subject_id']?>"  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;">Take Attendance</a>
+                <?php if(isTeacher()): ?>
+                    <a class="createButton btn btn-primary text-white mt-4 col-2" href=<?php  "/teacher/attendance/remove?subject_id=".$data['subject_id']?>  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;">Delete Attendance</a>
+                    <a class="createButton btn btn-primary text-white mt-4 col-2" href=<?php  "/teacher/attendance/add?subject_id=".$data['subject_id']?>  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;">Take Attendance</a>
                 <?php endif; ?>
 
               </div>
@@ -22,7 +22,7 @@
           <div class="container mb-5 w-100">
             <div class="row w-100">
               <div class="col-md-8 w-100">
-                <form class="d-flex gap-5" method="post" action="/attendance/show?subject_id=<?=$data['subject_id']?>">
+                <form class="d-flex gap-5" method="post" action="/student/attendance/show?subject_id=<?=$data['subject_id']?>">
                     <div class="form-floating w-25">
                         <select name='year' class="form-select <?php echo isset($params['validation']) && $params['validation']->hasError('year') ? ' is-invalid' : ' ';  ?>" id="floatingSelect">
                             <option selected=""></option>
@@ -82,12 +82,10 @@
                                         <?php $present = false;?>
 
                                         <?php if(in_array((int)$day,$values)): ?>
-                                                <?php $present = true;?>
-                                                
-                                            <?php endif; ?>
+                                            <?php $present = true;?>
+                                        <?php endif; ?>
                                             
                                           <td><?= $present ? '<i class="bi bi-bookmark-x-fill text-danger"></i>' : '' ?></td>
-                                        
                                     <?php endforeach; ?>
                                 </tr>
                             <?php endforeach; ?>

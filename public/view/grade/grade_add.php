@@ -34,7 +34,7 @@
             <div class="tab-pane fade show active profile-edit pt-3" id="profile-edit">
 
               <!-- Profile Edit Form -->
-              <form action="/grade/insert<?php echo isset($data['student_id'],$data['subject_id']) ? '?student_id='.$data['student_id'].'&subject_id='.$data['subject_id'] : '?student_id='.$data['student_id'].'&subject_id='.$subjectData[0]->subject_id ?>" method="post" enctype="multipart/form-data">
+              <form action="/grade/insert<?php echo isset($data['student_id'],$data['subject_id']) ? '?student_id='.$data['student_id'].'&subject_id='.$data['subject_id'] : '' ?>" method="post" enctype="multipart/form-data">
 
                     <div class="row mb-3">
                         <label class="col-md-4 col-lg-3 col-form-label">Assigment</label>

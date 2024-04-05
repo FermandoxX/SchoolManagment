@@ -43,7 +43,7 @@
                         <tr>
                           <td class="text-center"><?=$attendanceData->name.' '.$attendanceData->surename?></td>
                           <td class="text-center"><?=$attendanceData->attendance_date?></td>
-                          <td class="text-center"><a href="/attendance/delete?attendance_id=<?=$attendanceData->attendance_id?>&subject_id=<?=$attendanceData->subject_id?>"><i class="bi bi-trash3-fill text-danger"></i></a></td>
+                          <td class="text-center"><a href=<?php echo isAdmin() ? "/attendance/delete?attendance_id=".$attendanceData->attendance_id."&subject_id=".$attendanceData->subject_id : "/teacher/attendance/delete?attendance_id=".$attendanceData->attendance_id."&subject_id=".$attendanceData->subject_id ?>><i class="bi bi-trash3-fill text-danger"></i></a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -9,7 +9,9 @@
             <div class="card-body">
               <div class="d-flex">
                 <h3 class="mt-3 mr-5 card-title col-9">Student</h3>
-                <a class="createButton btn btn-primary text-white mt-4 ml-5 col-2" href="/student/create"  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;"><i class="bi bi-plus" style="font-size: 21px;"></i>Create Student</a>
+                <?php if(isAdmin()): ?>
+                  <a class="createButton btn btn-primary text-white mt-4 ml-5 col-2" href="/student/create"  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;"><i class="bi bi-plus" style="font-size: 21px;"></i>Create Student</a>
+                <?php endif; ?>
               </div>
             </div>
           </div>

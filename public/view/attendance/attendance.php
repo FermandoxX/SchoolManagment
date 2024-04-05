@@ -27,7 +27,13 @@
 
           <div class="d-flex row gap-5 justify-content-center align-items-center w-100">
             <?php foreach($subjectsData as $subjectData): ?>
+              <?php if(isAdmin()): ?>
                 <a class="col-xl-4" style=" width:325px; height:180px" href="/attendance/subject?<?= "subject_id=$subjectData->subject_id" ?>">
+              <?php elseif(isTeacher()): ?> 
+                <a class="col-xl-4" style=" width:325px; height:180px" href="/teacher/attendance/subject?<?= "subject_id=$subjectData->subject_id" ?>">
+              <?php else: ?> 
+                <a class="col-xl-4" style=" width:325px; height:180px" href="/student/attendance/subject?<?= "subject_id=$subjectData->subject_id" ?>">
+              <?php endif; ?>
                   <div class="card w-100 h-100 ">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center mt-2">
                       <img src="/../image/<?php echo $subjectData->subject_image ?? 'Sad photo icon.jpg'; ?>" alt="Profile" class="w-100 rounded"  height="70" style="object-fit:cover">

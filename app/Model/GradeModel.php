@@ -7,11 +7,7 @@ use Core\Model;
 class GradeModel extends Model {
   public $tableName = 'grades';
   public $primaryKey = 'grade_id';
-  // protected $join = [
-  //   'right join' => 'users u on g.student_id = u.user_id',
-  //   'inner join' => ['classes c on c.class_id = u.class_id',
-  //                    'subjects s on s.subject_id = g.subject_id']
-  // ];
+  public $limit = 5;
 
   public function gradesRule(){
       return [
@@ -21,20 +17,22 @@ class GradeModel extends Model {
       ];
   }
   
-  public function pages($condition = [],$rowsPerPage,$pattern){
+  public function pages($condition = [],$pattern){
       $numberOfRows = count($this->getData($condition,$pattern));
       
-      $pages = ceil($numberOfRows/$rowsPerPage);
+      $pages = ceil($numberOfRows/$this->limit);
       return $pages;
   }
 
-  public function pagination($condition = [],$limit,$offset,$pattern,$requestData){
-      if(isset($requestData['pageNr'])){
-          $page = $requestData['pageNr'] - 1;
-          $offset = $page * $limit;
-      }
+  public function pagination($condition = [],$pattern,$requestData){
+    $offset = 0;
 
-      $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset]);
-      return $data;
+    if(isset($requestData['pageNr'])){
+      $page = $requestData['pageNr'] - 1;
+      $offset = $page * $this->limit;
+    }
+
+    $data = $this->getData($condition,$pattern,['limit'=>$this->limit,'offset'=>$offset]);
+    return $data;
   }
 }

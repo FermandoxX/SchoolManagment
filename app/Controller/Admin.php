@@ -25,17 +25,14 @@ class Admin{
     public function index(){
         $data = $this->request->getBody();
         $condition = ['role_name'=>'admin'];
-        $rowPerPage = 5;
-        $offset = 0;
         $pattern = [];
 
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
         }
 
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern);
-        $userData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
-        $this->userModel->join = 'test';
+        $pageSum = $this->userModel->pages($condition,$pattern);
+        $userData = $this->userModel->pagination($condition,$pattern,$data);
         return view('admin/admin',['pages'=>$pageSum,'usersData'=>$userData, 'data' => $data]);
     }
 
@@ -67,7 +64,6 @@ class Admin{
     }
 
     public function edit(){
-        
         $data = $this->request->getBody();
         $userData = $this->userModel->getDataById($data['id']);
 

@@ -33,7 +33,7 @@
                     <div class="card-body profile-card pt-4 d-flex flex-column justify-content-center align-items-center">
                       <img src="/../image/<?php echo $userData->image ?? 'Sad photo icon.jpg'; ?>" alt="Profile" class="rounded-circle w-50" width="112" height="112" style="object-fit:cover">
                       <h3><?php echo strlen($userData->name.' '.$userData->surename) < 15 ? $userData->name.' '.$userData->surename : substr($userData->name.' '.$userData->surename,0,12).'...' ?></h3>
-                      <h6><?php echo "Email: "; echo strlen($userData->email) < 23 ? ucfirst($userData->email) : substr($userData->email,0,20).'...' ?></h6>
+                      <h6><?php echo "Email: "; echo strlen($userData->email) < 17 ? ucfirst($userData->email) : substr($userData->email,0,14).'...' ?></h6>
                       <h6><?php echo "Address: ". ucfirst($userData->address) ?></h6>
                       <?php if($userData->user_id != getUserId()): ?>
                       <div class="d-flex gap-2">
@@ -50,11 +50,12 @@
                 $currentPage = isset($data['pageNr']) ? $data['pageNr'] : 1 ;
                 unset($data['pageNr']);
                 $url = false;
+
                 if (count($data) > 0) {
                   $url =  '&' . http_build_query($data);
                 }
               ?>
-              <?php if($params['pages']): ?>
+              <?php if($pages): ?>
                 <div class="mt-5">
                   <nav class="pagination-outer" aria-label="Page navigation">
                     <ul class="pagination">
@@ -66,11 +67,11 @@
                         </li>  
                       <?php endif; ?>  
                       
-                      <?php for($i = 1;$i <= $params['pages'];$i++): ?>
+                      <?php for($i = 1;$i <= $pages;$i++): ?>
                           <li class="page-item"><a class="page-link" href="?pageNr=<?=$i?><?= $url ?? ''?>"><?= $i ?></a></li>
                       <?php endfor; ?>
                       
-                      <?php if($params['pages'] > $currentPage): ?>
+                      <?php if($pages > $currentPage): ?>
                         <li class="page-item">
                           <a href="?pageNr=<?=$currentPage + 1?><?= $url ?? ''?>" class="page-link" aria-label="Previous">
                             <span aria-hidden="true">Next</span>

@@ -33,8 +33,6 @@ class Subject {
     public function index(){
         
         $data = $this->request->getBody();
-        $rowPerPage = 3;
-        $offset = 0;
         $pattern = [];
         $condition = [];
 
@@ -47,11 +45,11 @@ class Subject {
         }
         $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
         left join users u on s.teacher_id = u.user_id';
-        $pageSum = $this->subjectModel->pages($condition,$rowPerPage,$pattern);
+        $pageSum = $this->subjectModel->pages($condition,$pattern);
 
         $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
         left join users u on s.teacher_id = u.user_id';
-        $subjectData = $this->subjectModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
+        $subjectData = $this->subjectModel->pagination($condition,$pattern,$data);
 
         return view('subject/subject',['pages'=>$pageSum,'subjectsData'=>$subjectData, 'data'=>$data]);
     }
@@ -70,7 +68,7 @@ class Subject {
         $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
         left join users u on s.teacher_id = u.user_id';
 
-        $subjectData = $this->subjectModel->getData(['subject_id'=>$data['id']],[],[],false);
+        $subjectData = $this->subjectModel->getData(['subject_id'=>$data['id']]);
         $teachersData = $this->userModel->getData(['role_name'=>'teacher']);
 
         if(!$subjectData){
@@ -96,7 +94,6 @@ class Subject {
             }
 
             $this->subjectModel->insertData($data);    
-
             redirect('/subject');
             setFlashMessage('success','Subject created successfully');
             exit;

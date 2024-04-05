@@ -7,6 +7,7 @@ use Core\Model;
 class AttendanceModel extends Model {
     public $tableName = 'attendance';
     public $primaryKey = 'attendance_id';
+    public $limit = 5;
 
     public function attendanceRules(){
         return [
@@ -16,36 +17,37 @@ class AttendanceModel extends Model {
         ];
     }
 
-    public function existAttendance($data,$subjectId){
+    public function existAttendance($data){
       foreach($data['checkbox'] as $studentId){
-        $studentsData = $this->getData(['student_id'=>$studentId,'subject_id'=>$subjectId]);
+        $studentsData = $this->getData(['student_id'=>$studentId,'subject_id'=>$data['subject_id']]);
 
         foreach($studentsData as $studentData){
           if(strtotime($studentData->attendance_date) == strtotime($data['attendance_date'])){
-            return ['studentId'=>$studentId,'value'=>false];
+            $key = array_search($studentData->student_id,$data['checkbox']);
+            unset($data['checkbox'][$key]);
           } 
-
         }
       }
 
-      return ['value'=>true];
+      return $data['checkbox'];
     }
 
-    public function pages($condition = [],$rowsPerPage,$pattern){
-
+    public function pages($condition = [],$pattern){
       $numberOfRows = count($this->getData($condition,$pattern));
 
-      $pages = ceil($numberOfRows/$rowsPerPage);
+      $pages = ceil($numberOfRows/$this->limit);
       return $pages;
     }
   
-    public function pagination($condition = [],$limit,$offset,$pattern,$requestData){
-        if(isset($requestData['pageNr'])){
-            $page = $requestData['pageNr'] - 1;
-            $offset = $page * $limit;
-        }
+    public function pagination($condition = [],$pattern,$requestData){
+      $offset = 0;
 
-        $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset]);
-        return $data;
+      if(isset($requestData['pageNr'])){
+        $page = $requestData['pageNr'] - 1;
+        $offset = $page * $this->limit;
+      }
+
+      $data = $this->getData($condition,$pattern,['limit'=>$this->limit,'offset'=>$offset]);
+      return $data;
     }
 }

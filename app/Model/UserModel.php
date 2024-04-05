@@ -7,6 +7,7 @@ use Core\Model;
 class UserModel extends Model{
     public $tableName = 'users';
     public $primaryKey = 'user_id';
+    public $limit = 5;
 
     public function loginRules(){
       return [
@@ -76,21 +77,22 @@ class UserModel extends Model{
       return true;
     }
 
-    public function pages($condition = [],$rowsPerPage,$pattern,$distinct = []){
+    public function pages($condition = [],$pattern,$distinct = []){
       $numberOfRows = count($this->getData($condition,$pattern,[],$distinct));
-
-      $pages = ceil($numberOfRows/$rowsPerPage);
+      $pages = ceil($numberOfRows/$this->limit);
 
       return $pages;
     }
 
-    public function pagination($condition,$limit,$offset,$pattern,$requestData,$distinct = []){
+    public function pagination($condition,$pattern,$requestData,$distinct = []){
+      $offset = 0;
+
       if(isset($requestData['pageNr'])){
           $page = $requestData['pageNr'] - 1;
-          $offset = $page * $limit;
+          $offset = $page * $this->limit;
       }
 
-      $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset],$distinct);
+      $data = $this->getData($condition,$pattern,['limit'=>$this->limit,'offset'=>$offset],$distinct);
       return $data;
     }
 

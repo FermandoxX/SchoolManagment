@@ -253,7 +253,7 @@ $(document).ready(function(){
     <?php endif; ?>
 
     <li class="nav-item">
-      <a class="admin nav-link collapsed" href="/teacher">
+      <a class="admin nav-link collapsed" href=<?php echo isStudent() ? "/student/teacher" : "/teacher"?>>
         <i class="bi bi-person-video3"></i>
         <span>Teachers</span>
       </a>
@@ -261,7 +261,7 @@ $(document).ready(function(){
 
     <?php if(isAdmin() || isTeacher()): ?>
       <li class="nav-item">
-        <a class="admin nav-link collapsed" href="/student">
+        <a class="admin nav-link collapsed" href=<?php echo isAdmin() ? "/student" : "/teacher/student"?>>
           <i class="bi bi-people-fill"></i>
           <span>Student</span>
         </a>
@@ -269,7 +269,7 @@ $(document).ready(function(){
     <?php endif; ?>
 
     <li class="nav-item">
-      <a class="admin nav-link collapsed" href="/subject">
+      <a class="admin nav-link collapsed" href=<?php echo isStudent() ? "/student/subject" : "/subject"?>>
         <i class="bi bi-book-fill"></i>
         <span>Subject</span>
       </a>
@@ -285,20 +285,26 @@ $(document).ready(function(){
     <?php endif; ?>
 
     <li class="nav-item">
-      <?php if(isStudent()): ?>
-        <a class="admin nav-link collapsed" href=<?php echo "/grade/supject?student_id=".getUserId()?>>
-      <?php elseif(isTeacher()): ?>
-        <a class="admin nav-link collapsed" href=<?php echo "/grade/supject?teacher_id=".getUserId()?>>
-      <?php else: ?>
-        <a class="admin nav-link collapsed" href="/grade">
-      <?php endif; ?>
+      <?php if(isStudent()):?>
+        <a class="admin nav-link collapsed" href=<?php echo "/student/grade/supject"?>>
         <i class="bi bi-clipboard-check-fill"></i>
         <span>Grade</span>
+      <?php elseif(isTeacher()): ?>
+        <a class="admin nav-link collapsed" href=<?php echo "/grade/supject"?>>
+        <i class="bi bi-clipboard-check-fill"></i>
+        <span>Grade</span>
+      <?php endif; ?>
       </a>
     </li>
 
     <li class="nav-item">
-      <a class="admin nav-link collapsed" href="/attendance">
+      <?php if(isAdmin()): ?>
+        <a class="admin nav-link collapsed" href="/attendance">
+      <?php elseif(isTeacher()): ?>
+        <a class="admin nav-link collapsed" href='/teacher/attendance'>
+      <?php else: ?>
+        <a class="admin nav-link collapsed" href="/student/attendance">
+      <?php endif;?>    
         <i class="bi bi-calendar-event-fill"></i>
         <span>Attendance</span>
       </a>

@@ -35,7 +35,7 @@
                       <h6><?php echo "Email: "; echo strlen($studentData->email) < 17 ? ucfirst($studentData->email) : substr($studentData->email,0,14).'...' ?></h6>
                       <?php if($studentData->user_id != getUserId()): ?>
                       <div class="d-flex gap-2">
-                        <a class="editDeleteButton mb-3 mr-3 bg-primary text-white" href=<?php echo isAdmin() == true ? "grade/supject?student_id=$studentData->user_id" : "grade/supject/add?student_id=$studentData->user_id&teacher_id=".getUserId()."&subject_id=".$data['subject_id']?>>Add Grade</a>
+                        <a class="editDeleteButton mb-3 mr-3 bg-primary text-white" href=<?php echo "grade/supject/add?student_id=$studentData->user_id&subject_id=".$data['subject_id']?>>Add Grade</a>
                       </div>
                       <?php endif; ?> 
                     </div>

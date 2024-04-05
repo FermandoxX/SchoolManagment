@@ -29,21 +29,14 @@ class Teacher {
         
         $data = $this->request->getBody();
         $condition = ['role_name'=>'teacher'];
-        $rowPerPage = 5;
-        $offset = 0;
         $pattern = [];
 
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
         }
 
-        if(isStudent()){
-            $this->userModel->join = 'inner join subjects s on u.user_id = s.teacher_id';
-            $condition = ['s.class_id'=>getUserData('class_id')];
-        }
-
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern);
-        $teachersData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
+        $pageSum = $this->userModel->pages($condition,$pattern);
+        $teachersData = $this->userModel->pagination($condition,$pattern,$data);
         return view('teacher/teacher',['pages'=>$pageSum,'teachersData'=>$teachersData, 'data' => $data]);
     }
 

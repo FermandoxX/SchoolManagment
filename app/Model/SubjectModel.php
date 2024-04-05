@@ -6,11 +6,7 @@ use Core\Model;
 class SubjectModel extends Model{
     public $tableName = 'subjects';
     public $primaryKey = 'subject_id';
-
-    // protected $join = [
-    //     'left join' => ['classes c on c.class_id = s.class_id',
-    //                      'users u on s.teacher_id = u.user_id']
-    // ];
+    public $limit = 5;
 
     public function subjectRules(){
         return [
@@ -29,20 +25,22 @@ class SubjectModel extends Model{
     }
 
 
-    public function pages($condition = [],$rowsPerPage,$pattern){
+    public function pages($condition = [],$pattern){
         $numberOfRows = count($this->getData($condition,$pattern));
         
-        $pages = ceil($numberOfRows/$rowsPerPage);
+        $pages = ceil($numberOfRows/$this->limit);
         return $pages;
     }
   
-    public function pagination($condition = [],$limit,$offset,$pattern,$requestData){
+    public function pagination($condition = [],$pattern,$requestData){
+        $offset = 0;
+
         if(isset($requestData['pageNr'])){
             $page = $requestData['pageNr'] - 1;
-            $offset = $page * $limit;
+            $offset = $page * $this->limit;
         }
 
-        $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset]);
+        $data = $this->getData($condition,$pattern,['limit'=>$this->limit,'offset'=>$offset]);
         return $data;
     }
 

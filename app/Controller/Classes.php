@@ -32,16 +32,14 @@ class Classes {
 
     public function index(){
         $data = $this->request->getBody();
-        $rowPerPage = 3;
-        $offset = 0;
         $pattern = [];
 
         if(isset($data['search'])){
             $pattern['class_name'] = $data['search'];
         }
 
-        $pageSum = $this->classModel->pages([],$rowPerPage,$pattern);
-        $classesData = $this->classModel->pagination([],$rowPerPage,$offset,$data,$pattern);
+        $pageSum = $this->classModel->pages([],$pattern);
+        $classesData = $this->classModel->pagination([],$data,$pattern);
 
         return view('class/class',['pages'=>$pageSum,'classesData'=>$classesData,'data'=>$data]);
     }
@@ -60,7 +58,6 @@ class Classes {
             exit;
         }
 
-        
         return view('class/class_update',['classData'=>$classData]);
     }
 

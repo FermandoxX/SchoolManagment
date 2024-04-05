@@ -18,6 +18,13 @@ use App\Controller\Grade;
 use App\Controller\Subject;
 use App\Controller\Student;
 use App\Controller\Attendance;
+use App\Controller\Teacher\TeacherStudent;
+use App\Controller\Teacher\TeacherAttendance;
+use App\Controller\Student\StudentTeacher;
+use App\Controller\Student\StudentSubject;
+use App\Controller\Student\StudentGrade;
+use App\Controller\Student\StudentAttendance;
+
 
 use App\Middleware\AuthMiddleware;
 use App\Middleware\AdminMiddleware;
@@ -66,7 +73,7 @@ $router->get('/teacher/password',[Teacher::class,'editPassword'],[AuthMiddleware
 $router->post('/teacher/password/update',[Teacher::class,'updatePassword'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->get('/teacher/delete',[Teacher::class,'delete'],[AuthMiddleware::class,AdminMiddleware::class]);
 
-$router->get('/student',[Student::class,'index'],[AuthMiddleware::class]);
+$router->get('/student',[Student::class,'index'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->get('/student/create',[Student::class,'add'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->post('/student/create',[Student::class,'create'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->get('/student/profile',[Student::class,'edit'],[AuthMiddleware::class,AdminMiddleware::class]);
@@ -102,6 +109,28 @@ $router->post('/attendance/insert',[Attendance::class,'insertAttendance'],[AuthM
 $router->post('/attendance/show',[Attendance::class,'showAttendance'],[AuthMiddleware::class,]);
 $router->get('/attendance/remove',[Attendance::class,'removeAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
 $router->get('/attendance/delete',[Attendance::class,'deleteAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
+
+//Teacher 
+$router->get('/teacher/student',[TeacherStudent::class,'index'],[TeacherMiddleware::class]);
+
+$router->get('/teacher/attendance',[TeacherAttendance::class,'index'],[TeacherMiddleware::class,AuthMiddleware::class]);
+$router->get('/teacher/attendance/subject',[TeacherAttendance::class,'attendanceSubject'],[TeacherMiddleware::class,AuthMiddleware::class]);
+$router->get('/teacher/attendance/add',[TeacherAttendance::class,'addAttendance'],[TeacherMiddleware::class,AuthMiddleware::class]);
+$router->get('/teacher/attendance/remove',[TeacherAttendance::class,'removeAttendance'],[TeacherMiddleware::class,AuthMiddleware::class]);
+$router->get('/teacher/attendance/delete',[TeacherAttendance::class,'deleteAttendance'],[TeacherMiddleware::class,AuthMiddleware::class]);
+
+//Student
+$router->get('/student/teacher',[StudentTeacher::class,'index'],[AuthMiddleware::class,StudentMiddleware::class]);
+
+$router->get('/student/subject',[StudentSubject::class,'index'],[AuthMiddleware::class,StudentMiddleware::class]);
+
+$router->get('/student/grade/supject',[StudentGrade::class,'subject'],[AuthMiddleware::class,StudentMiddleware::class]);
+$router->get('/student/grade/supject/add',[StudentGrade::class,'add'],[AuthMiddleware::class,StudentMiddleware::class]);
+
+$router->get('/student/attendance',[StudentAttendance::class,'index'],[StudentMiddleware::class,AuthMiddleware::class]);
+$router->get('/student/attendance/subject',[StudentAttendance::class,'attendanceSubject'],[StudentMiddleware::class,AuthMiddleware::class]);
+$router->post('/student/attendance/show',[StudentAttendance::class,'showAttendance'],[StudentMiddleware::class,AuthMiddleware::class,]);
+
 
 $router->run();
 $response->send();

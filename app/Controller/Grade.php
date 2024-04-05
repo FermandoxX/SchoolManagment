@@ -33,76 +33,42 @@ class Grade {
 
     public function index(){
         $data = $this->request->getBody();
-        $condition = ['role_name'=>'student'];
+        $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+
+        if(!in_array($data['subject_id'],$teacherSubjectsId)){
+            setFlashMessage('error','You do not have permission to view students assigned to other teachers');
+            redirect('/grade/supject?teacher_id='.getUserId());
+            exit;
+        }
+
+        $condition = ['role_name'=>'student','subject_id'=>$data['subject_id']];
         $rowPerPage = 5;
         $offset = 0;
         $pattern = [];
-        $this->userModel->join = 'inner join classes c on u.class_id = c.class_id';
+        $this->userModel->join = 'inner join classes c on u.class_id = c.class_id
+        inner join subjects s on s.class_id = u.class_id';
         
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
         }
 
-        if(isTeacher()){
-            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
-
-            if(!in_array($data['subject_id'],$teacherSubjectsId)){
-                setFlashMessage('error','You do not have permission to view students assigned to other teachers');
-                redirect('/grade/supject?teacher_id='.getUserId());
-                exit;
-            }
-
-            $this->userModel->join .= ' inner join subjects s on s.class_id = u.class_id';
-            $condition['subject_id'] = $data['subject_id'];
-        }
-
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern);
-        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
+        $pageSum = $this->userModel->pages($condition,$pattern);
+        $studentsData = $this->userModel->pagination($condition,$pattern,$data);
 
         return view('grade/grade',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
     }
 
     public function subject(){
         $data = $this->request->getBody();
-        $rowPerPage = 3;
-        $offset = 0;
         $pattern = [];
-        $this->userModel->join = 'inner join subjects s on s.class_id = u.class_id';
-        if(isset($data['student_id'])){
-            $condition = ['user_id'=>$data['student_id']];
-        }
-
+        $this->userModel->join = 'inner join subjects s on s.teacher_id = u.user_id';
+        $condition = ['user_id'=>getUserId()];
         if(isset($data['search'])){
             $pattern['subject_name'] = $data['search'];
         }
 
-        if(isStudent()){
-            if(getUserId() != $data['student_id']){
-                setFlashMessage('error','You do not have permission to view subjects assigned to other students');
-                redirect('/grade/supject?student_id='.getUserId());
-                exit;
-            }
-        }
-
-        if(isTeacher()){
-            if(getUserId() != $data['teacher_id']){
-                setFlashMessage('error','You do not have permission to view subjects assigned to other teachers');
-                redirect('/grade/supject?teacher_id='.getUserId());
-                exit;
-            }
-
-            $this->userModel->join = 'inner join subjects s on s.teacher_id = u.user_id';
-            $condition = ['user_id'=>$data['teacher_id']];
-        }
-
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern);
-        $subjectsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data);
-// dd($subjectsData);
-        // if(!$subjectsData){
-        //     setFlashMessage('error','Student dont exist');
-        //     redirect('/grade');
-        //     exit;
-        // }
+        $pageSum = $this->userModel->pages($condition,$pattern);
+        $subjectsData = $this->userModel->pagination($condition,$pattern,$data);
 
         if(isset($data['student_id'])){
             $averageGrade = $this->gradeAverageCalculate($data['student_id']);
@@ -113,51 +79,27 @@ class Grade {
 
     public function add(){
         $data = $this->request->getBody();
+        $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+
+        if(!in_array($data['subject_id'],$teacherSubjectsId)){
+            setFlashMessage('error','You do not have permission to add grades at subjects who are not assigned to you');
+            redirect('/grade/supject?teacher_id='.getUserId());
+            exit;
+        }
+
+        $teacherStudentsId = $this->subjectModel->teacherStudentsId(getUserId(),$data['subject_id']);
+
+        if(!in_array($data['student_id'],$teacherStudentsId)){
+            setFlashMessage('error','You do not have permission to grade students who are not assigned to you or arent in this class');
+            redirect('/grade/supject?teacher_id='.getUserId());
+            exit;
+        }
+
         $this->gradeModel->join = 'inner join subjects s on g.subject_id = s.subject_id';
         $this->subjectModel->join = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
         $gradeCondition = isset($data['subject_id']) ? ['student_id'=>$data['student_id'],'s.subject_id'=>$data['subject_id']] : [];
         $subjectCondition = isset($data['subject_id']) ? ['s.subject_id'=>$data['subject_id']] : [];
-
-        if(isTeacher()){
-            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
-
-            if(!in_array($data['subject_id'],$teacherSubjectsId)){
-                setFlashMessage('error','You do not have permission to add grades at subjects who are not assigned to you');
-                redirect('/grade/supject?teacher_id='.getUserId());
-                exit;
-            }
-
-            if(getUserId() != $data['teacher_id']){
-                setFlashMessage('error','You do not have permission to add grades for other teachers');
-                redirect('/grade/supject?teacher_id='.getUserId());
-                exit;
-            }   
-
-            $teacherStudentsId = $this->subjectModel->teacherStudentsId(getUserId(),$data['subject_id']);
-
-            if(!in_array($data['student_id'],$teacherStudentsId)){
-                setFlashMessage('error','You do not have permission to grade students who are not assigned to you or arent in this class');
-                redirect('/grade/supject?teacher_id='.getUserId());
-                exit;
-            }
-        }
-
-        if(isStudent()){
-            if(getUserId() != $data['student_id']){
-                setFlashMessage('error','You do not have permission to view grades assigned to other students');
-                redirect('/grade/supject?student_id='.getUserId());
-                exit;
-            }
-
-            $studentSubjects = $this->subjectModel->studentSubjectsId(getUserId());
-
-            if(!in_array($data['subject_id'],$studentSubjects)){
-                setFlashMessage('error','You do not have permission to view grades assigned to other subjects');
-                redirect('/grade/supject?student_id='.getUserId());
-                exit;
-            }
-        }
 
         $gradeData = $this->gradeModel->getData($gradeCondition,[],[],false);
         $subjectData = $this->subjectModel->getData($subjectCondition,[],[],false);
@@ -198,14 +140,8 @@ class Grade {
 
             $this->gradeModel->updateDataById($data['grade_id'],$data);
 
-            if(isTeacher()){
-                setFlashMessage('success','Grade updated successfully');
-                redirect('/grade?subject_id='.$data['subject_id']);
-                exit;
-            }
-
             setFlashMessage('success','Grade updated successfully');
-            redirect('/grade/supject?student_id='.$studentId);
+            redirect('/grade?subject_id='.$data['subject_id']);
             exit;
         }
         

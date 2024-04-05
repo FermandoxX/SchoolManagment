@@ -7,6 +7,7 @@ use Core\Model;
 class ClassModel extends Model {
     public $tableName = 'classes';
     public $primaryKey = 'class_id';
+    public $limit = 5;
 
     public function classRules(){
         return [
@@ -28,20 +29,22 @@ class ClassModel extends Model {
       return $classId;
     }
 
-    public function pages($condition = [],$rowsPerPage,$pattern = []){
+    public function pages($condition = [],$pattern = []){
       $numberOfRows = count($this->getData($condition,$pattern));
       
-      $pages = ceil($numberOfRows/$rowsPerPage);
+      $pages = ceil($numberOfRows/$this->limit);
       return $pages;
     }
 
-    public function pagination($condition = [],$limit,$offset,$requestData,$pattern = []){
+    public function pagination($condition = [],$requestData,$pattern = []){
+      $offset = 0;
+
       if(isset($requestData['pageNr'])){
           $page = $requestData['pageNr'] - 1;
-          $offset = $page * $limit;
+          $offset = $page * $this->limit;
       }
 
-      $data = $this->getData($condition,$pattern,['limit'=>$limit,'offset'=>$offset]);
+      $data = $this->getData($condition,$pattern,['limit'=>$this->limit,'offset'=>$offset]);
       return $data;
     }
 }

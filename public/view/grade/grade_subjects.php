@@ -9,7 +9,7 @@
             <div class="card-body">
               <div class="d-flex">
                 <h3 class="mt-3 mr-5 card-title col-9">Grade</h3>
-                <?php if(isAdmin() || isStudent()): ?>
+                <?php if(isStudent()): ?>
                 <h3 class="mt-3 mr-5 card-title col-9">Average Grade: <?php echo isset($data['averageGrade']) ? $data['averageGrade'] : 0 ?></h3>
                 <?php endif; ?>
               </div>
@@ -18,7 +18,7 @@
           
           <div class="d-flex row gap-5 justify-content-center align-items-center w-100">
             <?php foreach($subjectsData as $subjectData): ?>
-                <a class="col-xl-4" style=" width:325px; height:180px" href=<?php echo isTeacher() ? "/grade?subject_id=$subjectData->subject_id" : "/grade/supject/add?student_id=$subjectData->user_id&subject_id=$subjectData->subject_id"?>>
+                <a class="col-xl-4" style=" width:325px; height:180px" href=<?php echo isTeacher() ? "/grade?subject_id=$subjectData->subject_id" : "/student/grade/supject/add?subject_id=$subjectData->subject_id"?>>
                   <div class="card w-100 h-100 ">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center mt-2">
                       <img src="/../image/<?php echo $subjectData->subject_image ?? 'Sad photo icon.jpg'; ?>" alt="Profile" class="w-100 rounded"  height="70" style="object-fit:cover">
