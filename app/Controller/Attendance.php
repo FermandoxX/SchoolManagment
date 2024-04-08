@@ -63,6 +63,10 @@ class Attendance {
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         $rules = $this->attendanceModel->attendanceRules();
 
+        if($data['student_id'] != ""){
+            $attendanceCondition['student_id'] = $data['student_id'];
+        }
+
         $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']]);
 
