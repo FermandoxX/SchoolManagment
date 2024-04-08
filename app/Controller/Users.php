@@ -40,11 +40,11 @@ class Users {
 
     public function updatePassword(){
         $enteredPasswords = $this->request->getBody();
-        $getRules = $this->userModel->passwordUpdateRules();
+        $rules = $this->userModel->passwordUpdateRules();
         $userId = getUserId();
         $userPassword = getPassword();
 
-        if($this->validation->validate($enteredPasswords,$getRules)){ 
+        if($this->validation->validate($enteredPasswords,$rules)){ 
 
             if(password_verify($enteredPasswords['password'],$userPassword)){
                 $hashedPassword = password_hash($enteredPasswords['renewpassword'], PASSWORD_DEFAULT);
@@ -65,11 +65,11 @@ class Users {
     
     public function updateProfile(){
         $enteredProfileData = $this->request->getBody();
-        $getRules = $this->userModel->profileUpdateRules();
+        $rules = $this->userModel->profileUpdateRules();
         $userId = getUserId();
         $image = $enteredProfileData['image'];
 
-        if($this->validation->validate($enteredProfileData,$getRules,$this->userModel,$userId)){
+        if($this->validation->validate($enteredProfileData,$rules,$this->userModel,$userId)){
 
             unset($enteredProfileData['image']);
             unset($enteredProfileData['userId']);

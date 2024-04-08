@@ -63,10 +63,10 @@ class Classes {
 
     public function create(){
         $data = $this->request->getBody();
-        $getRules = $this->classModel->classRules();
+        $rules = $this->classModel->classRules();
         $image = $data['class_image'];
 
-        if($this->validation->validate($data,$getRules,$this->classModel)){
+        if($this->validation->validate($data,$rules,$this->classModel)){
             unset($data['class_image']);
             if(isset($image['name']) && $image['name'] != ""){
                 moveUploadedImage($image);
@@ -84,11 +84,11 @@ class Classes {
 
     public function update(){
         $data = $this->request->getBody();
-        $getRules = $this->classModel->classRules();
+        $rules = $this->classModel->classRules();
         $image = $data['image'];
         $classId = $data['classId'];
 
-        if($this->validation->validate($data,$getRules,$this->classModel,$classId)){
+        if($this->validation->validate($data,$rules,$this->classModel,$classId)){
             unset($data['image']);
             unset($data['classId']);
 

@@ -108,12 +108,12 @@ class Grade {
     public function insert(){
 
         $data = $this->request->getBody();
-        $getRules = $this->gradeModel->gradesRule();
+        $rules = $this->gradeModel->gradesRule();
         $this->subjectModel->join = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
         $studentId = $data['student_id'];
 
-        if($this->validation->validate($data,$getRules)){
+        if($this->validation->validate($data,$rules)){
             unset($data['student_id']);
             $data['student_id'] = $studentId;
 

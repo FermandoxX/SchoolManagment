@@ -42,10 +42,10 @@ class Admin{
 
     public function create(){
         $createUserData = $this->request->getBody();
-        $getRules = $this->userModel->createRules();
+        $rules = $this->userModel->createRules();
         $image = $createUserData['image'];
 
-        if($this->validation->validate($createUserData,$getRules,$this->userModel)){
+        if($this->validation->validate($createUserData,$rules,$this->userModel)){
             unset($createUserData['image']);
             if(isset($image['name']) && $image['name'] != ""){
                 moveUploadedImage($image);
@@ -94,11 +94,11 @@ class Admin{
 
     public function updateProfile(){
         $data = $this->request->getBody();
-        $getRules = $this->userModel->profileUpdateRules();
+        $rules = $this->userModel->profileUpdateRules();
         $adminId = $this->request->getBody()['userId'];
         $image = $data['image'];
 
-        if($this->validation->validate($data,$getRules,$this->userModel,$adminId)){
+        if($this->validation->validate($data,$rules,$this->userModel,$adminId)){
             unset($data['image']);
             unset($data['userId']);
 
@@ -121,11 +121,11 @@ class Admin{
 
     public function updatePassword(){
         $data = $this->request->getBody();
-        $getRules = $this->userModel->passwordUpdateRules();
+        $rules = $this->userModel->passwordUpdateRules();
         $userId = $data['userId'];
         $userPassword = $this->userModel->getData(['user_id'=>$userId])[0]->password;
 
-        if($this->validation->validate($data,$getRules,$this->userModel,$userId)){ 
+        if($this->validation->validate($data,$rules,$this->userModel,$userId)){ 
 
             if(password_verify($data['password'],$userPassword)){
                 $hashedPassword = password_hash($data['renewpassword'], PASSWORD_DEFAULT);

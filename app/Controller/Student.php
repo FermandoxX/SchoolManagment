@@ -74,10 +74,10 @@ class Student{
     public function create(){
         
         $data = $this->request->getBody(); 
-        $getRules = $this->userModel->createRules();
+        $rules = $this->userModel->createRules();
         $image = $data['image'];
 
-        if($this->validation->validate($data,$getRules,$this->userModel)){
+        if($this->validation->validate($data,$rules,$this->userModel)){
             unset($data['image']);
 
             if(isset($image['name']) && $image['name'] != ""){
@@ -100,11 +100,11 @@ class Student{
 
     public function updateProfile(){
         $data = $this->request->getBody();
-        $getRules = $this->userModel->profileUpdateRules();
+        $rules = $this->userModel->profileUpdateRules();
         $userId = $data['userId'];
         $image = $data['image'];
 
-        if($this->validation->validate($data,$getRules,$this->userModel,$userId)){
+        if($this->validation->validate($data,$rules,$this->userModel,$userId)){
             unset($data['image']);
             unset($data['userId']);
 
@@ -127,11 +127,11 @@ class Student{
 
     public function updatePassword(){
         $enteredPasswords = $this->request->getBody();
-        $getRules = $this->userModel->passwordUpdateRules();
+        $rules = $this->userModel->passwordUpdateRules();
         $studentId = $enteredPasswords['userId'];
         $userPassword = $this->userModel->getData(['user_id'=>$studentId])[0]->password;
 
-        if($this->validation->validate($enteredPasswords,$getRules,$this->userModel,$studentId)){ 
+        if($this->validation->validate($enteredPasswords,$rules,$this->userModel,$studentId)){ 
 
             if(password_verify($enteredPasswords['password'],$userPassword)){
                 $hashedPassword = password_hash($enteredPasswords['renewpassword'], PASSWORD_DEFAULT);

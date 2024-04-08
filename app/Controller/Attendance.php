@@ -61,7 +61,7 @@ class Attendance {
         $attendancesStudent = [];
         $year = date('Y') - 2;
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        $getRules = $this->attendanceModel->attendanceRules();
+        $rules = $this->attendanceModel->attendanceRules();
 
         if(!empty($data['student_id'])){
             $attendanceCondition['student_id'] = $data['student_id'];
@@ -70,7 +70,7 @@ class Attendance {
         $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']]);
 
-        if($this->validation->validate($data,$getRules)){
+        if($this->validation->validate($data,$rules)){
             $days = [];
             $day = cal_days_in_month(CAL_GREGORIAN, $monthByNumber, $data['year']); 
 
@@ -100,7 +100,7 @@ class Attendance {
 
     public function insertAttendance(){
         $data = $this->request->getBody();
-        $getRules = $this->attendanceModel->attendanceRules();
+        $rules = $this->attendanceModel->attendanceRules();
         $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
         $studentsData = $this->userModel->getData(['subject_id'=>$data['subject_id']]);
 
@@ -110,7 +110,7 @@ class Attendance {
             exit;
         }
 
-        if($this->validation->validate($data,$getRules)){ 
+        if($this->validation->validate($data,$rules)){ 
 
             $checkbox = $this->attendanceModel->existAttendance($data);
             foreach($checkbox as $studentId){

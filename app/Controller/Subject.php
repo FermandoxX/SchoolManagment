@@ -80,10 +80,10 @@ class Subject {
 
     public function create(){
         $data = $this->request->getBody();
-        $getRules = $this->subjectModel->subjectRules();
+        $rules = $this->subjectModel->subjectRules();
         $image = $data['subject_image'];
 
-        if($this->validation->validate($data,$getRules)){
+        if($this->validation->validate($data,$rules)){
             unset($data['subject_image']);
             if(isset($image['name']) && $image['name'] != ""){
                 moveUploadedImage($image);
@@ -104,13 +104,13 @@ class Subject {
 
     public function update(){
         $subjectData = $this->request->getBody();
-        $getRules = $this->subjectModel->subjectRulesUpdate();
+        $rules = $this->subjectModel->subjectRulesUpdate();
         $image = $subjectData['subject_image'];
         $subjectId = $subjectData['subject_id'];
         $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
         left join users u on s.teacher_id = u.user_id';
 
-        if($this->validation->validate($subjectData,$getRules)){
+        if($this->validation->validate($subjectData,$rules)){
             unset($subjectData['subject_image']);
             if(isset($image['name']) && $image['name'] != ""){
                 moveUploadedImage($image);
