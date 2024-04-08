@@ -27,18 +27,11 @@ class Attendance {
 
     public function index(){
         $data = $this->request->getBody();
-        $rowPerPage = 3;
-        $offset = 0;
         $pattern = [];
         $condition = [];
 
         if(isset($data['search'])){
             $pattern['subject_name'] = $data['search'];
-        }
-        
-        if(isStudent()){
-            $this->subjectModel->join = 'inner join users u on s.class_id = u.class_id';
-            $condition['user_id'] = getUserId();
         }
 
         $pageSum = $this->subjectModel->pages($condition,$pattern);
@@ -52,16 +45,6 @@ class Attendance {
         $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
         $year = date('Y') - 2;
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-        if(isStudent()){
-            $studentSubjects = $this->subjectModel->studentSubjectsId(getUserId());
-
-            if(!in_array($data['subject_id'],$studentSubjects)){
-                setFlashMessage('error','You do not have permission to view attendance to other subjects that arent assigned to you');
-                redirect('/attendance');
-                exit;
-            }
-        }
 
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']]);
         return view('attendance/attendance_subject',['studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'data'=>$data]);
@@ -82,10 +65,6 @@ class Attendance {
 
         if(!empty($data['student_id'])){
             $attendanceCondition['student_id'] = $data['student_id'];
-        }
-
-        if(isStudent()){
-            $attendanceCondition['student_id'] = getUserId();
         }
 
         $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';

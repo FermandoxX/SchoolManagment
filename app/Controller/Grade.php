@@ -42,8 +42,6 @@ class Grade {
         }
 
         $condition = ['role_name'=>'student','subject_id'=>$data['subject_id']];
-        $rowPerPage = 5;
-        $offset = 0;
         $pattern = [];
         $this->userModel->join = 'inner join classes c on u.class_id = c.class_id
         inner join subjects s on s.class_id = u.class_id';

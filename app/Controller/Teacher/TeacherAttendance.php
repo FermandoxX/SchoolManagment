@@ -27,6 +27,8 @@ class TeacherAttendance {
     }
 
     public function index(){
+        // dd('in here');
+
         $data = $this->request->getBody();
         $pattern = [];
         $condition = ['teacher_id'=>getUserId()];

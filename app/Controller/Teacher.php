@@ -112,8 +112,7 @@ class Teacher {
             }
             
             $teacherData['role_name'] = 'teacher';
-            $teacherData['password'] = password_hash($teacherData['password'], PASSWORD_DEFAULT);
-            
+
             $this->userModel->updateDataById($teacherId,$teacherData);
             setFlashMessage('success','Teacher created successful');
             redirect('/teacher');

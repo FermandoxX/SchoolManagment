@@ -131,7 +131,6 @@ $router->get('/student/attendance',[StudentAttendance::class,'index'],[StudentMi
 $router->get('/student/attendance/subject',[StudentAttendance::class,'attendanceSubject'],[StudentMiddleware::class,AuthMiddleware::class]);
 $router->post('/student/attendance/show',[StudentAttendance::class,'showAttendance'],[StudentMiddleware::class,AuthMiddleware::class,]);
 
-
 $router->run();
 $response->send();
 

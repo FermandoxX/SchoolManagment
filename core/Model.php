@@ -39,19 +39,6 @@ class Model extends Validation{
     public function getData($data = [], $pattern = [], $limit = [],$distinct = []){
         $sql = "select * from $this->tableName {$this->tableName[0]}";   
 
-        // if($addJoin && $this->join){
-        //     foreach ($this->join as $key => $values){
-
-        //         if(is_array($values)){
-        //             foreach($values as $value){
-        //                 $sql .= " $key" . ' ' . $value;
-        //             }
-        //         }else{
-        //             $sql .= " $key" . ' ' . $values;
-        //         }
-        //     }
-        // }
-
         if(!empty($distinct)){
             $columns = '';
 
@@ -63,10 +50,6 @@ class Model extends Validation{
 
             $sql = str_replace('*','DISTINCT '.$columns,$sql);
         }
-
-        // if($query != null){
-        //     $sql .= " $query ";
-        // }
 
         if($this->join != null){
             $sql .= " $this->join ";

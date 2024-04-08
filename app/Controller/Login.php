@@ -42,13 +42,12 @@ class Login{
          setLayout('auth');
          return view('login',['validation'=>$this->validation]);
       }
-
       if (!$this->userModel->login($enteredEmail,$enteredPassword)) {
          setFlashMessage('error', 'Incorrect username or password');
          setLayout('auth');
          return view('login');
       }
-      
+
       $userData = $this->userModel->getData(['email'=>$enteredEmail]);
       setSession('userData',$userData);
       setFlashMessage('success','Login success');

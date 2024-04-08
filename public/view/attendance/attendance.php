@@ -16,7 +16,7 @@
           <div class="container mb-5 d-flex justify-content-end align-items-center w-100">
             <div class="row height d-flex justify-content-end align-items-center w-75">
               <div class="col-md-8 w-50">
-                <form class="search" method="get" action="/attendance">
+                <form class="search" method="get" action=<?php echo isAdmin() ? "/attendance" : (isTeacher() ? "/teacher/attendance" : "/student/attendance") ?>>
                    <i class="fa fa-search"></i>
                    <input type="text" name="search" class="form-control" placeholder="Search Now">
                    <button class="btn btn-primary">Search</button>
