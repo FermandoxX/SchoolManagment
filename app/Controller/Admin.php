@@ -114,7 +114,6 @@ class Admin{
         }
 
         $adminData = $this->userModel->getDataById($adminId);
-
         return view('admin/admin_profile',['validation'=>$this->validation,'userData'=>$adminData]);
 
     }

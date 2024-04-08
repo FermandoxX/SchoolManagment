@@ -56,16 +56,12 @@ class Attendance {
         $date = strtotime($data['month'].' '.$data['year']);
         $monthByNumber = date_parse($data['month'])['month'];
         $formattedDate = date('Y-m', $date);
-        
+
         $attendanceCondition = ['subject_id'=>$data['subject_id']];
         $attendancesStudent = [];
         $year = date('Y') - 2;
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         $rules = $this->attendanceModel->attendanceRules();
-
-        if(!empty($data['student_id'])){
-            $attendanceCondition['student_id'] = $data['student_id'];
-        }
 
         $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']]);
@@ -79,7 +75,7 @@ class Attendance {
             }
 
             $this->attendanceModel->join = 'inner join users u on u.user_id = a.student_id';
-            $attendancesData = $this->attendanceModel->getData($attendanceCondition,['attendance_date'=>$formattedDate],[],false);
+            $attendancesData = $this->attendanceModel->getData($attendanceCondition,['attendance_date'=>$formattedDate]);
             foreach($attendancesData as $attendanceData){
                 $attendancesStudent[$attendanceData->name.' '.$attendanceData->surename][] = (int)date("d", strtotime($attendanceData->attendance_date));
             }
@@ -149,7 +145,7 @@ class Attendance {
     public function deleteAttendance(){
         $data = $this->request->getBody();
         $checkingAttendance = $this->attendanceModel->getDataById($data['attendance_id']);
-
+        
         if(!$checkingAttendance){
             setFlashMessage('error','Attendance dont exist');
             redirect('/attendance/remove?subject_id='.$data['subject_id']);

@@ -27,8 +27,6 @@ class TeacherAttendance {
     }
 
     public function index(){
-        // dd('in here');
-
         $data = $this->request->getBody();
         $pattern = [];
         $condition = ['teacher_id'=>getUserId()];
@@ -58,6 +56,7 @@ class TeacherAttendance {
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']]);
+        
         return view('attendance/attendance_subject',['studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'data'=>$data]);
     }
 

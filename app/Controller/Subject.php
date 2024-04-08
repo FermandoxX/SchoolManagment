@@ -31,28 +31,23 @@ class Subject {
     }
 
     public function index(){
-        
         $data = $this->request->getBody();
         $pattern = [];
         $condition = [];
+        $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
+        left join users u on s.teacher_id = u.user_id';
 
         if(isset($data['search'])){
             $pattern['subject_name'] = $data['search'];
         }
 
-        $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
-        left join users u on s.teacher_id = u.user_id';
         $pageSum = $this->subjectModel->pages($condition,$pattern);
-
-        $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
-        left join users u on s.teacher_id = u.user_id';
         $subjectData = $this->subjectModel->pagination($condition,$pattern,$data);
 
         return view('subject/subject',['pages'=>$pageSum,'subjectsData'=>$subjectData, 'data'=>$data]);
     }
 
     public function add(){
-        
         $classesData = $this->classModel->getData();      
         $teachersData = $this->userModel->getData(['role_name'=>'teacher']);
 
@@ -60,7 +55,6 @@ class Subject {
     }
 
     public function edit(){
-        
         $data = $this->request->getBody();
         $this->subjectModel->join = 'left join classes c on c.class_id = s.class_id
         left join users u on s.teacher_id = u.user_id';

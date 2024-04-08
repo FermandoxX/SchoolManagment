@@ -41,11 +41,11 @@ class Grade {
             exit;
         }
 
-        $condition = ['role_name'=>'student','subject_id'=>$data['subject_id']];
-        $pattern = [];
         $this->userModel->join = 'inner join classes c on u.class_id = c.class_id
         inner join subjects s on s.class_id = u.class_id';
-        
+        $condition = ['role_name'=>'student','subject_id'=>$data['subject_id']];
+        $pattern = [];
+
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
         }
@@ -58,9 +58,10 @@ class Grade {
 
     public function subject(){
         $data = $this->request->getBody();
-        $pattern = [];
         $this->userModel->join = 'inner join subjects s on s.teacher_id = u.user_id';
         $condition = ['user_id'=>getUserId()];
+        $pattern = [];
+
         if(isset($data['search'])){
             $pattern['subject_name'] = $data['search'];
         }
@@ -68,10 +69,6 @@ class Grade {
         $pageSum = $this->userModel->pages($condition,$pattern);
         $subjectsData = $this->userModel->pagination($condition,$pattern,$data);
 
-        if(isset($data['student_id'])){
-            $averageGrade = $this->gradeAverageCalculate($data['student_id']);
-            $data['averageGrade'] = $averageGrade;
-        }
         return view('grade/grade_subjects',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data]);
     }
 
@@ -96,11 +93,11 @@ class Grade {
         $this->gradeModel->join = 'inner join subjects s on g.subject_id = s.subject_id';
         $this->subjectModel->join = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
-        $gradeCondition = isset($data['subject_id']) ? ['student_id'=>$data['student_id'],'s.subject_id'=>$data['subject_id']] : [];
-        $subjectCondition = isset($data['subject_id']) ? ['s.subject_id'=>$data['subject_id']] : [];
+        $gradeCondition = ['student_id'=>$data['student_id'],'s.subject_id'=>$data['subject_id']];
+        $subjectCondition = ['s.subject_id'=>$data['subject_id']];
 
-        $gradeData = $this->gradeModel->getData($gradeCondition,[],[],false);
-        $subjectData = $this->subjectModel->getData($subjectCondition,[],[],false);
+        $gradeData = $this->gradeModel->getData($gradeCondition);
+        $subjectData = $this->subjectModel->getData($subjectCondition);
 
         return view('grade/grade_add',['gradeData'=>$gradeData,'subjectData'=>$subjectData,'data'=>$data]);
     }
@@ -111,11 +108,8 @@ class Grade {
         $rules = $this->gradeModel->gradesRule();
         $this->subjectModel->join = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
-        $studentId = $data['student_id'];
 
         if($this->validation->validate($data,$rules)){
-            unset($data['student_id']);
-            $data['student_id'] = $studentId;
 
             if($data['grade_id'] == ""){
                 unset($data['grade_id']);
@@ -125,11 +119,7 @@ class Grade {
 
                 $this->gradeModel->insertData($data);
                 setFlashMessage('success','Grade inserted successfully');
-                if(isTeacher()){
-                    redirect('/grade/supject?teacher_id='.getUserId());
-                    exit;
-                }
-                redirect('/grade/supject?student_id='.$studentId);
+                redirect('/grade/supject?student_id='.$data['student_id']);
                 exit;
             }
 
