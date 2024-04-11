@@ -77,7 +77,7 @@ class Model extends Validation{
             }
             $patternCondition = $this->removeLastWord($patternCondition);
 
-            $condition =" and ".$patternCondition;
+            $condition =" and (".$patternCondition.' )';
 
             if(!empty($pattern) && empty($data)){
                 $condition =" where ".$patternCondition;
@@ -91,7 +91,7 @@ class Model extends Validation{
                $sql .= " $key $value ";
             }
         }
-// dd($sql);
+
         $this->query($sql);
 
         foreach($data as $columnsNames => $columnsValues){
@@ -119,23 +119,19 @@ class Model extends Validation{
         $setCondition = $this->removeLastWord($setCondition);
         $whereCondition .= "$this->primaryKey = :$this->primaryKey";
         $sql = "UPDATE $this->tableName SET $setCondition WHERE $whereCondition";
-
-        try {    
-            $this->query($sql);
-            $this->bind(":$this->primaryKey", $id);
+           
+        $this->query($sql);
+        $this->bind(":$this->primaryKey", $id);
          
-            foreach ($data as $columnName => $columnValue) {
-                $this->bind(":$columnName", $columnValue);
-            }
-
-            $this->execute();
-        } catch (\PDOException $e) {
-            echo $e->getMessage();
+        foreach ($data as $columnName => $columnValue) {
+            $this->bind(":$columnName", $columnValue);
         }
+        $this->execute();
+
     }
 
     public function updateData($conditions, $data) {
-        try {
+        try {//shikoje
             $setCondition = '';
             $whereCondition = '';
     
@@ -162,7 +158,7 @@ class Model extends Validation{
                 $this->bind(":$columnName", $columnValue);
             }
             $this->execute();
-    
+
         } catch (\PDOException $e) {
             echo $e->getMessage();
         }
@@ -197,16 +193,12 @@ class Model extends Validation{
         }
     }
 
-    public function deleteData($id,$comperison = '='){
-        try {
-            $sql = "Delete from $this->tableName where $this->primaryKey $comperison :$this->primaryKey";
+    public function delete($id){//delete
+            $sql = "Delete from $this->tableName where $this->primaryKey = :$this->primaryKey";
 
             $this->query($sql);
             $this->bind(":$this->primaryKey",$id);
             $this->execute();
-        } catch (\PDOException $e) {
-            echo $e->getMessage();
-        }
     }
 
     private function removeLastWord($sentence){

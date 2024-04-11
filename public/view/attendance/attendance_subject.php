@@ -79,13 +79,11 @@
                                 <tr>
                                     <th scope="row" style="width: 88px;"><?=$key?></th>
                                     <?php foreach($days as $day): ?>
-                                        <?php $present = false;?>
-
-                                        <?php if(in_array((int)$day,$values)): ?>
-                                            <?php $present = true;?>
-                                        <?php endif; ?>
-                                            
-                                          <td><?= $present ? '<i class="bi bi-bookmark-x-fill text-danger"></i>' : '' ?></td>
+                                        <td>
+                                            <?php if(in_array((int)$day,$values)): ?>
+                                                <i class="bi bi-bookmark-x-fill text-danger"></i>
+                                            <?php endif; ?>   
+                                        </td>
                                     <?php endforeach; ?>
                                 </tr>
                             <?php endforeach; ?>

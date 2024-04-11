@@ -157,7 +157,7 @@ class Admin{
             exit;
         }
 
-        $this->userModel->deleteData($data['id']);
+        $this->userModel->delete($data['id']);
         setFlashMessage('success','Admin deleted successfully');
         redirect('/admin');
         exit;

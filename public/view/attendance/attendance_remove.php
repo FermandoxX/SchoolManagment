@@ -17,7 +17,7 @@
           <div class="container mb-5 d-flex justify-content-end align-items-center w-100">
             <div class="row height d-flex justify-content-end align-items-center w-75">
               <div class="col-md-8 w-50">
-                <form class="search" method="get" action="/attendance/remove?subject_id=<?=$data['subject_id']?>">
+                <form class="search" method="get" action="/teacher/attendance/remove?subject_id=<?=$data['subject_id']?>">
                    <i class="fa fa-search"></i>
                    <input type="text" name="search" class="form-control" placeholder="Search Now">
                    <input type="text" name="subject_id" class="form-control" placeholder="Search Now" value=<?=$data['subject_id']?> style="display: none;">

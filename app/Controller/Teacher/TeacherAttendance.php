@@ -99,7 +99,7 @@ class TeacherAttendance {
 
         $pageSum = $this->attendanceModel->pages($condition,$pattern);
         $attendancesData = $this->attendanceModel->pagination($condition,$pattern,$data);
-
+        
         return view('attendance/attendance_remove',['pages'=>$pageSum,'attendancesData'=>$attendancesData,'data'=>$data]);
     }
 
@@ -120,7 +120,7 @@ class TeacherAttendance {
             exit;
         }
 
-        $this->attendanceModel->deleteData($data['attendance_id']);
+        $this->attendanceModel->delete($data['attendance_id']);
         setFlashMessage('success','Attendance deleted successfully');
         redirect("/attendance/remove?subject_id=".$data['subject_id']);
     }

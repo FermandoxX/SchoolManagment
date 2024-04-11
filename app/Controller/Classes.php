@@ -120,7 +120,7 @@ class Classes {
 
         $this->subjectModel->updateData(['class_id'=>$data['id']],['class_id'=>null]);
         $this->userModel->updateData(['class_id'=>$data['id']],['class_id'=>null]);
-        $this->classModel->deleteData($data['id']);
+        $this->classModel->delete($data['id']);
         setFlashMessage('success','Class deleted successfully');
         redirect('/class');
         exit;

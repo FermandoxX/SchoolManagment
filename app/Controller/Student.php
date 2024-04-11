@@ -165,7 +165,7 @@ class Student{
             exit;
         }
 
-        $this->userModel->deleteData($data['id']);
+        $this->userModel->delete($data['id']);
 
         setFlashMessage('success','Student deleted successfully');
         redirect('/student');

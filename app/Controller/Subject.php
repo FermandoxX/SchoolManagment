@@ -142,7 +142,7 @@ class Subject {
             exit;
         }
 
-        $this->subjectModel->deleteData($data['id']);
+        $this->subjectModel->delete($data['id']);
         setFlashMessage('success','Subject deleted successfully');
         redirect('/subject');
         exit;

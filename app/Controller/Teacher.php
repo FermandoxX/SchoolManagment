@@ -163,7 +163,7 @@ class Teacher {
         }
 
         $this->subjectModel->updateData(['teacher_id'=>$data['id']],['teacher_id'=>null]);
-        $this->userModel->deleteData($data['id']);
+        $this->userModel->delete($data['id']);
 
         setFlashMessage('success','Teacher deleted successfully');
         redirect('/teacher');

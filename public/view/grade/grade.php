@@ -13,17 +13,6 @@
             </div>
           </div>
 
-          <div class="container mb-5 d-flex justify-content-end align-items-center w-100">
-            <div class="row height d-flex justify-content-end align-items-center w-75">
-              <div class="col-md-8 w-50">
-                <form class="search" action="/grade">
-                   <i class="fa fa-search"></i>
-                   <input type="text" name="search" class="form-control" placeholder="Search Now">
-                   <button class="btn btn-primary">Search</button>
-                </form>         
-              </div>        
-            </div>
-          </div>
           <div class="d-flex row gap-5 justify-content-center align-items-center w-100">
             <?php foreach($studentsData as $studentData): ?>
                 <div class="col-xl-4" style=" width:275px; height:310px">

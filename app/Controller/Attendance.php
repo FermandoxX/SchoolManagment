@@ -156,7 +156,7 @@ class Attendance {
             exit;
         }
 
-        $this->attendanceModel->deleteData($data['attendance_id']);
+        $this->attendanceModel->delete($data['attendance_id']);
         setFlashMessage('success','Attendance deleted successfully');
         redirect("/attendance/remove?subject_id=".$data['subject_id']);
 

@@ -29,7 +29,7 @@ class TeacherStudent{
         }
 
         $pageSum = $this->userModel->pages($condition,$pattern,null,$distinct);
-        $studentsData = $this->userModel->pagination($condition,$pattern,$data,null,$distinct);
+        $studentsData = $this->userModel->pagination($condition,$pattern,$data,$distinct);
 
         return view('student/student',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
     }
