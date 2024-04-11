@@ -18,7 +18,6 @@ class Validation {
     public const RULE_IMAGE = 'image';
     public const RULE_GRADES = 'grades';
     public const RULE_DATE = 'date';
-    // public const RULE_ISSET = 'isset';
     public array $errors = [];
 
 
@@ -108,7 +107,7 @@ class Validation {
         $message = $this->errormessage()[$rule] ?? '';
 
         foreach($params as $key => $value){
-
+          
           if(isset($this->labels()[$value])){
             $value = $this->labels()[$value];
           }  

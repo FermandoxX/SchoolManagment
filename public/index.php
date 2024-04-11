@@ -47,6 +47,7 @@ $router = $app->get(Router::class);
 $router->get('/',[Login::class,'index']);
 $router->post('/',[Login::class,'login']);
 
+//Admin
 $router->get('/main',[Main::class,'index'],[AuthMiddleware::class]);
 
 $router->get('/user',[Users::class,'index'],[AuthMiddleware::class]);
@@ -104,11 +105,8 @@ $router->post('/grade/insert',[Grade::class,'insert'],[AuthMiddleware::class,Adm
 
 $router->get('/attendance',[Attendance::class,'index'],[AuthMiddleware::class]);
 $router->get('/attendance/subject',[Attendance::class,'attendanceSubject'],[AuthMiddleware::class]);
-$router->get('/attendance/add',[Attendance::class,'addAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
-$router->post('/attendance/insert',[Attendance::class,'insertAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
+$router->post('/attendance/insert',[Attendance::class,'insertAttendance'],[AuthMiddleware::class,TeacherMiddleware::class]);
 $router->post('/attendance/show',[Attendance::class,'showAttendance'],[AuthMiddleware::class,]);
-$router->get('/attendance/remove',[Attendance::class,'removeAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
-$router->get('/attendance/delete',[Attendance::class,'deleteAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
 
 //Teacher 
 $router->get('/teacher/student',[TeacherStudent::class,'index'],[TeacherMiddleware::class]);

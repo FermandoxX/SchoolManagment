@@ -9,7 +9,8 @@ class Request{
         if($position === false){
             return $path;
         }
-            return substr($path, 0, $position);
+
+        return substr($path, 0, $position);
     }
 
     public function getMethod(){
@@ -30,7 +31,7 @@ class Request{
                 $body[$key] = filter_input(INPUT_POST,$key,FILTER_SANITIZE_SPECIAL_CHARS);
 
                 if(is_array($value)){
-                    $body[$key] = $value;
+                    $body[$key] = filter_var_array($value, FILTER_SANITIZE_SPECIAL_CHARS);
                 }
             }
 

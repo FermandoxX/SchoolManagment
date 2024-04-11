@@ -88,16 +88,6 @@ class Attendance {
         return view('attendance/attendance_subject',['validation'=>$this->validation,'studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'data'=>$data]);
     }
 
-
-    public function addAttendance(){
-        $data = $this->request->getBody();
-        $this->userModel->join = 'inner join subjects s on u.class_id = s.class_id';
-
-        $studentsData = $this->userModel->getData(['subject_id'=>$data['subject_id']],[],[],false);
-
-        return view('attendance/attendance_add',['data'=>$data,'studentsData'=>$studentsData]);
-    }
-
     public function insertAttendance(){
         $data = $this->request->getBody();
         $rules = $this->attendanceModel->attendanceRules();
@@ -122,44 +112,10 @@ class Attendance {
                 $this->attendanceModel->insertData($data);
             }
             setFlashMessage('success','Attendance inserted successfully');
-            redirect("/attendance/add?subject_id=".$data['subject_id']);
+            redirect("/teacher/attendance/add?subject_id=".$data['subject_id']);
             exit;
         }
         return view('attendance/attendance_add',['validation'=>$this->validation,'data'=>$data,'studentsData'=>$studentsData]);
-    }
-
-    public function removeAttendance(){
-        $data = $this->request->getBody();
-        $this->attendanceModel->join = 'inner join users u on u.user_id = a.student_id';
-        $condition = ['subject_id'=>$data['subject_id']];
-        $pattern = [];
-
-        if(isset($data['search'])){
-            $pattern['name'] = $data['search'];
-            $pattern['surename'] = $data['search'];
-            $pattern['attendance_date'] = $data['search'];
-        }
-
-        $pageSum = $this->attendanceModel->pages($condition,$pattern);
-        $attendancesData = $this->attendanceModel->pagination($condition,$pattern,$data);
-
-        return view('attendance/attendance_remove',['pages'=>$pageSum,'attendancesData'=>$attendancesData,'data'=>$data]);
-    }
-
-    public function deleteAttendance(){
-        $data = $this->request->getBody();
-        $checkingAttendance = $this->attendanceModel->getDataById($data['attendance_id']);
-        
-        if(!$checkingAttendance){
-            setFlashMessage('error','Attendance dont exist');
-            redirect('/attendance/remove?subject_id='.$data['subject_id']);
-            exit;
-        }
-
-        $this->attendanceModel->delete($data['attendance_id']);
-        setFlashMessage('success','Attendance deleted successfully');
-        redirect("/attendance/remove?subject_id=".$data['subject_id']);
-
     }
 
 }

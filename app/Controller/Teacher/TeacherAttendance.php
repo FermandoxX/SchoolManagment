@@ -28,15 +28,10 @@ class TeacherAttendance {
 
     public function index(){
         $data = $this->request->getBody();
-        $pattern = [];
         $condition = ['teacher_id'=>getUserId()];
 
-        if(isset($data['search'])){
-            $pattern['subject_name'] = $data['search'];
-        }
-
-        $pageSum = $this->subjectModel->pages($condition,$pattern);
-        $subjectsData = $this->subjectModel->pagination($condition,$pattern,$data);
+        $pageSum = $this->subjectModel->pages($condition);
+        $subjectsData = $this->subjectModel->pagination($condition,[],$data);
 
         return view('attendance/attendance',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data]);
     }

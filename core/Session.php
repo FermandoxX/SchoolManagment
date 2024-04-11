@@ -2,8 +2,7 @@
 
 namespace Core;
 
-class Session {//studjoje
-
+class Session {
     protected const FLASH_KEY = 'flashMessage';
 
     public function __construct(){

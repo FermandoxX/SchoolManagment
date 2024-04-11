@@ -25,14 +25,14 @@ class SubjectModel extends Model{
     }
 
 
-    public function pages($condition = [],$pattern){
+    public function pages($condition = [],$pattern = []){
         $numberOfRows = count($this->getData($condition,$pattern));
         
         $pages = ceil($numberOfRows/$this->limit);
         return $pages;
     }
   
-    public function pagination($condition = [],$pattern,$requestData){
+    public function pagination($condition = [],$pattern = [],$requestData){
         $offset = 0;
 
         if(isset($requestData['pageNr'])){

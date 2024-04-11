@@ -16,7 +16,6 @@ class Model extends Validation{
         $dsn = "mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=UTF8";
         $user = DB_USER;
         $password = DB_PASS;
-        $db = DB_NAME;
         $this->pdo = new PDO($dsn,$user,$password);
          
         try {
@@ -131,69 +130,59 @@ class Model extends Validation{
     }
 
     public function updateData($conditions, $data) {
-        try {//shikoje
-            $setCondition = '';
-            $whereCondition = '';
-    
-            foreach ($data as $columnName => $columnValue) {
-                $setCondition .= "$columnName = :$columnName, ";
-            }
-    
-            $setCondition = rtrim($setCondition, ', ');
-    
-            foreach ($conditions as $columnName => $columnValue) {
-                $whereCondition .= "AND $columnName = :where_$columnName ";
-            }
-    
-            $whereCondition = ltrim($whereCondition, 'AND ');
-    
-            $sql = "UPDATE $this->tableName SET $setCondition WHERE $whereCondition";
-            $this->query($sql);
-    
-            foreach ($conditions as $columnName => $columnValue) {
-                $this->bind(":where_$columnName", $columnValue);
-            }
-    
-            foreach ($data as $columnName => $columnValue) {
-                $this->bind(":$columnName", $columnValue);
-            }
-            $this->execute();
+       
+        $setCondition = '';
+        $whereCondition = '';
 
-        } catch (\PDOException $e) {
-            echo $e->getMessage();
+        foreach ($data as $columnName => $columnValue) {
+            $setCondition .= "$columnName = :$columnName , ";
         }
+
+        $setCondition = $this->removeLastWord($setCondition, ', ');
+
+        foreach ($conditions as $columnName => $columnValue) {
+            $whereCondition .= "AND $columnName = :where_$columnName ";
+        }
+
+        $whereCondition = ltrim($whereCondition, 'AND ');
+
+        $sql = "UPDATE $this->tableName SET $setCondition WHERE $whereCondition";
+        $this->query($sql);
+
+        foreach ($conditions as $columnName => $columnValue) {
+            $this->bind(":where_$columnName", $columnValue);
+        }
+
+        foreach ($data as $columnName => $columnValue) {
+            $this->bind(":$columnName", $columnValue);
+        }
+        $this->execute();
     }
     
     public function insertData($data){
-        try {
-             $columns = '';
-             $bindValues = '';
-
-             foreach($data as $columnsNames => $columnsValues){
-                 $columns .= "$columnsNames , ";
-             }
-             $columns = $this->removeLastWord($columns);
-         
-             foreach($data as $columnsNames => $columnsValues){
-                 $bindValues .= ":$columnsNames , ";
-             }
-             $bindValues = $this->removeLastWord($bindValues);
-         
-             $sql = "insert into $this->tableName($columns) values($bindValues)";
-             $this->query($sql);
-         
-             foreach($data as $columnsNames => $columnsValues){
-                 $this->bind(":$columnsNames",$columnsValues);
-             }   
-         
-             $this->execute();        
-        } catch (\PDOException $e) {
-             echo "Error: " . $e->getMessage();
-             die();
+        $columns = '';
+        $bindValues = '';
+        foreach($data as $columnsNames => $columnsValues){
+            $columns .= "$columnsNames , ";
         }
+        $columns = $this->removeLastWord($columns);
+     
+        foreach($data as $columnsNames => $columnsValues){
+            $bindValues .= ":$columnsNames , ";
+        }
+        $bindValues = $this->removeLastWord($bindValues);
+    
+        $sql = "insert into $this->tableName($columns) values($bindValues)";
+        $this->query($sql);
+     
+        foreach($data as $columnsNames => $columnsValues){
+            $this->bind(":$columnsNames",$columnsValues);
+        }   
+    
+        $this->execute();
     }
 
-    public function delete($id){//delete
+    public function delete($id){
             $sql = "Delete from $this->tableName where $this->primaryKey = :$this->primaryKey";
 
             $this->query($sql);
