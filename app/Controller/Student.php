@@ -27,7 +27,7 @@ class Student{
         $data = $this->request->getBody();
         $condition = ['role_name'=>'student'];
         $pattern = [];
-
+        $this->userModel->join = ' left join classes c on c.class_id = u.class_id';
 
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];

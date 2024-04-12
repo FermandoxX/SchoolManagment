@@ -18,10 +18,11 @@ class TeacherStudent{
     }
 
     public function index(){
-        $this->userModel->join = 'inner join subjects s on s.class_id = u.class_id';
+        $this->userModel->join = 'inner join subjects s on s.class_id = u.class_id
+        left join classes c on c.class_id = u.class_id';
         $data = $this->request->getBody();
         $condition = ['role_name'=>'student','teacher_id'=>getUserId()];
-        $distinct = ['user_id', 'name', 'email', 'password', 'phone_number', 'role_name', 'address', 'image', 'surename'];
+        $distinct = ['user_id', 'name', 'email', 'password', 'phone_number', 'role_name', 'address', 'image', 'surename','class_name'];
         $pattern = [];
 
         if(isset($data['search'])){
@@ -30,7 +31,6 @@ class TeacherStudent{
 
         $pageSum = $this->userModel->pages($condition,$pattern,null,$distinct);
         $studentsData = $this->userModel->pagination($condition,$pattern,$data,$distinct);
-
         return view('student/student',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
     }
 }

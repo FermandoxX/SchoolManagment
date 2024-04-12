@@ -77,7 +77,7 @@ class UserModel extends Model{
       return true;
     }
 
-    public function pages($condition = [],$pattern,$distinct = []){
+    public function pages($condition = [],$pattern = [],$distinct = []){
       $numberOfRows = count($this->getData($condition,$pattern,[],$distinct));
       $pages = ceil($numberOfRows/$this->limit);
 

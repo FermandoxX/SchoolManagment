@@ -105,7 +105,7 @@ class TeacherAttendance {
 
         if(!$checkingAttendance){
             setFlashMessage('error','Attendance dont exist');
-            redirect('/attendance/remove?subject_id='.$data['subject_id']);
+            redirect('/teacher/attendance/remove?subject_id='.$data['subject_id']);
             exit;
         }
 
@@ -117,7 +117,7 @@ class TeacherAttendance {
 
         $this->attendanceModel->delete($data['attendance_id']);
         setFlashMessage('success','Attendance deleted successfully');
-        redirect("/attendance/remove?subject_id=".$data['subject_id']);
+        redirect("/teacher/attendance/remove?subject_id=".$data['subject_id']);
     }
 
 }

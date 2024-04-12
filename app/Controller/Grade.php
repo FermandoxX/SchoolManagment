@@ -44,14 +44,9 @@ class Grade {
         $this->userModel->join = 'inner join classes c on u.class_id = c.class_id
         inner join subjects s on s.class_id = u.class_id';
         $condition = ['role_name'=>'student','subject_id'=>$data['subject_id']];
-        $pattern = [];
 
-        if(isset($data['search'])){
-            $pattern['email'] = $data['search'];
-        }
-
-        $pageSum = $this->userModel->pages($condition,$pattern);
-        $studentsData = $this->userModel->pagination($condition,$pattern,$data);
+        $pageSum = $this->userModel->pages($condition);
+        $studentsData = $this->userModel->pagination($condition,[],$data);
 
         return view('grade/grade',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
     }
@@ -60,19 +55,14 @@ class Grade {
         $data = $this->request->getBody();
         $this->userModel->join = 'inner join subjects s on s.teacher_id = u.user_id';
         $condition = ['user_id'=>getUserId()];
-        $pattern = [];
-
-        if(isset($data['search'])){
-            $pattern['subject_name'] = $data['search'];
-        }
-
-        $pageSum = $this->userModel->pages($condition,$pattern);
-        $subjectsData = $this->userModel->pagination($condition,$pattern,$data);
+        
+        $pageSum = $this->userModel->pages($condition);
+        $subjectsData = $this->userModel->pagination($condition,[],$data);
 
         return view('grade/grade_subjects',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data]);
     }
 
-    public function add(){
+    public function add(){//shikoje
         $data = $this->request->getBody();
         $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
 

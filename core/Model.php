@@ -90,7 +90,7 @@ class Model extends Validation{
                $sql .= " $key $value ";
             }
         }
-
+// dp($sql);
         $this->query($sql);
 
         foreach($data as $columnsNames => $columnsValues){
