@@ -62,7 +62,7 @@ class Grade {
         return view('grade/grade_subjects',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data]);
     }
 
-    public function add(){//shikoje
+    public function add(){
         $data = $this->request->getBody();
         $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
 
@@ -124,7 +124,7 @@ class Grade {
         }
         
         $gradeData = $this->gradeModel->getData(['student_id'=>$data['student_id'],'subject_id'=>$data['subject_id']]);
-        $subjectData = $this->subjectModel->getData(['subject_id'=>$data['subject_id']],[],[],false);
+        $subjectData = $this->subjectModel->getData(['subject_id'=>$data['subject_id']]);
 
         return view('grade/grade_add',['gradeData'=>$gradeData,'subjectData'=>$subjectData,'data'=>$data,'validation'=>$this->validation]);
     }

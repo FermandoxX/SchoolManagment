@@ -34,7 +34,7 @@ class Router{
       $method = $this->request->getMethod();
 
       $callback = isset($this->routes[$method][$path]) ? $this->routes[$method][$path]['callback'] : false;
-      
+
       if($callback === false){
          $this->response->statusCode = 404;
          setLayout('error');
