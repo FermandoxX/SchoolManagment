@@ -46,7 +46,7 @@ class StudentGrade {
 
         $pageSum = $this->userModel->pages($condition,$pattern);
         $subjectsData = $this->userModel->pagination($condition,$pattern,$data);
-// dd($subjectsData);
+        
         return view('grade/grade_subjects',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data]);
     }
 
@@ -56,7 +56,7 @@ class StudentGrade {
 
         if(!in_array($data['subject_id'],$studentSubjects)){
             setFlashMessage('error','You do not have permission to view grades assigned to other subjects');
-            redirect('/grade/supject?student_id='.getUserId());
+            redirect('/student/grade/supject');
             exit;
         }
 
