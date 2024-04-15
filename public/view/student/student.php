@@ -35,8 +35,8 @@
                     <div class="card-body profile-card pt-4 d-flex flex-column justify-content-center align-items-center">
                       <img src="/../image/<?php echo $studentData->image ?? 'Sad photo icon.jpg'; ?>" alt="Profile" class="rounded-circle w-50" width="112" height="112" style="object-fit:cover">
                       <h3><?php echo strlen($studentData->name.' '.$studentData->surename) < 15 ? $studentData->name.' '.$studentData->surename : substr($studentData->name.' '.$studentData->surename,0,12).'...' ?></h3>
-                      <h6><?php echo "Email: "; echo strlen($studentData->email) < 20 ? ucfirst($studentData->email) : substr($studentData->email,0,17).'...' ?></h6>
-                      <h6><?php echo "Class: "; echo strlen($studentData->class_name) < 20 ? ucfirst($studentData->class_name) : substr($studentData->class_name,0,17).'...' ?></h6>
+                      <h6><?php echo "Email: "; echo strlen($studentData->email) < 15 ? ucfirst($studentData->email) : substr($studentData->email,0,12).'...' ?></h6>
+                      <h6><?php echo "Class: "; echo strlen($studentData->class_name) < 15 ? ucfirst($studentData->class_name) : substr($studentData->class_name,0,12).'...' ?></h6>
                       <h6><?php echo "Address: ". $studentData->address ?></h6>
                       <?php if(isAdmin()): ?>
                       <?php if($studentData->user_id != getUserId()): ?>
