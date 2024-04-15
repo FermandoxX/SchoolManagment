@@ -33,6 +33,8 @@ class Teacher {
 
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
+            $pattern['name'] = $data['search'];
+            $pattern['surename'] = $data['search'];
         }
 
         $pageSum = $this->userModel->pages($condition,$pattern);

@@ -31,6 +31,9 @@ class Student{
 
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
+            $pattern['name'] = $data['search'];
+            $pattern['surename'] = $data['search'];
+            $pattern['class_name'] = $data['search'];
         }
 
         $pageSum = $this->userModel->pages($condition,$pattern);
