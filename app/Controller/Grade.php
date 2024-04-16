@@ -71,7 +71,6 @@ class Grade {
             redirect('/grade/supject?teacher_id='.getUserId());
             exit;
         }
-
         $teacherStudentsId = $this->subjectModel->teacherStudentsId(getUserId(),$data['subject_id']);
 
         if(!in_array($data['student_id'],$teacherStudentsId)){
