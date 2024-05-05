@@ -33,13 +33,6 @@ class Grade {
 
     public function index(){
         $data = $this->request->getBody();
-        $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
-
-        if(!in_array($data['subject_id'],$teacherSubjectsId)){
-            setFlashMessage('error','You do not have permission to view students assigned to other teachers');
-            redirect('/grade/supject?teacher_id='.getUserId());
-            exit;
-        }
 
         $this->userModel->join = 'inner join classes c on u.class_id = c.class_id
         inner join subjects s on s.class_id = u.class_id';
@@ -53,31 +46,15 @@ class Grade {
 
     public function subject(){
         $data = $this->request->getBody();
-        $this->userModel->join = 'inner join subjects s on s.teacher_id = u.user_id';
-        $condition = ['user_id'=>getUserId()];
-        
-        $pageSum = $this->userModel->pages($condition);
-        $subjectsData = $this->userModel->pagination($condition,[],$data);
 
+        $pageSum = $this->subjectModel->pages();
+        $subjectsData = $this->subjectModel->pagination([],[],$data);
+        
         return view('grade/grade_subjects',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data]);
     }
 
     public function add(){
         $data = $this->request->getBody();
-        $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
-
-        if(!in_array($data['subject_id'],$teacherSubjectsId)){
-            setFlashMessage('error','You do not have permission to add grades at subjects who are not assigned to you');
-            redirect('/grade/supject?teacher_id='.getUserId());
-            exit;
-        }
-        $teacherStudentsId = $this->subjectModel->teacherStudentsId(getUserId(),$data['subject_id']);
-
-        if(!in_array($data['student_id'],$teacherStudentsId)){
-            setFlashMessage('error','You do not have permission to grade students who are not assigned to you or arent in this class');
-            redirect('/grade/supject?teacher_id='.getUserId());
-            exit;
-        }
 
         $this->gradeModel->join = 'inner join subjects s on g.subject_id = s.subject_id';
         $this->subjectModel->join = 'inner join classes c on c.class_id = s.class_id
@@ -108,7 +85,7 @@ class Grade {
 
                 $this->gradeModel->insertData($data);
                 setFlashMessage('success','Grade inserted successfully');
-                redirect('/grade/supject?student_id='.$data['student_id']);
+                redirect('/grade/subject?student_id='.$data['student_id']);
                 exit;
             }
 

@@ -74,7 +74,7 @@
                     </div>
 
                     
-                <?php if(isTeacher() || isAdmin()):?>                
+                <?php if(isTeacher()):?>                
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>

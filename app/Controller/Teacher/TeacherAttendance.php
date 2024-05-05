@@ -102,6 +102,7 @@ class TeacherAttendance {
         $data = $this->request->getBody();
         $checkingAttendance = $this->attendanceModel->getDataById($data['attendance_id']);
         $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+        $teacherAttendancesId = $this->attendanceModel->teacherAttendancesId(getUserId());
 
         if(!$checkingAttendance){
             setFlashMessage('error','Attendance dont exist');
@@ -114,6 +115,12 @@ class TeacherAttendance {
             redirect('/teacher/attendance');
             exit;
         }
+
+        if(!in_array($data['attendance_id'],$teacherAttendancesId)){
+            setFlashMessage('error','You do not have permission to delete attendance who are not assigned to you');
+            redirect('/teacher/attendance');
+            exit;
+        }        
 
         $this->attendanceModel->delete($data['attendance_id']);
         setFlashMessage('success','Attendance deleted successfully');

@@ -56,7 +56,7 @@ class StudentGrade {
 
         if(!in_array($data['subject_id'],$studentSubjects)){
             setFlashMessage('error','You do not have permission to view grades assigned to other subjects');
-            redirect('/student/grade/supject');
+            redirect('/student/grade/subject');
             exit;
         }
 

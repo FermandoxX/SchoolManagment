@@ -25,7 +25,6 @@ class Response {
 
     public function redirect($url){
         header('location: '.$url);
-
     }
 
     public function send(){
@@ -33,7 +32,8 @@ class Response {
 
         foreach($this->header as $name => $value){  
             header("$name:$value");
-        }    
+        }   
+
         echo $this->body;
     }
 

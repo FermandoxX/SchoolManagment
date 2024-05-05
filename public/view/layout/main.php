@@ -286,11 +286,15 @@ $(document).ready(function(){
 
     <li class="nav-item">
       <?php if(isStudent()):?>
-        <a class="admin nav-link collapsed" href=<?php echo "/student/grade/supject"?>>
+        <a class="admin nav-link collapsed" href=<?php echo "/student/grade/subject"?>>
         <i class="bi bi-clipboard-check-fill"></i>
         <span>Grade</span>
       <?php elseif(isTeacher()): ?>
-        <a class="admin nav-link collapsed" href=<?php echo "/grade/supject"?>>
+        <a class="admin nav-link collapsed" href=<?php echo "/teacher/grade/subject"?>>
+        <i class="bi bi-clipboard-check-fill"></i>
+        <span>Grade</span>
+      <?php else: ?>  
+        <a class="admin nav-link collapsed" href=<?php echo "/grade/subject"?>>
         <i class="bi bi-clipboard-check-fill"></i>
         <span>Grade</span>
       <?php endif; ?>

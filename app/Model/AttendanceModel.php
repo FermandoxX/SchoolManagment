@@ -50,4 +50,17 @@ class AttendanceModel extends Model {
       $data = $this->getData($condition,$pattern,['limit'=>$this->limit,'offset'=>$offset]);
       return $data;
     }
+
+    
+    public function teacherAttendancesId($teacherId){
+      $teacherAttendancesId = [];
+      $this->join = 'inner join subjects s on a.subject_id = s.subject_id';
+      $teacherAttendances = $this->getData(['teacher_id'=>$teacherId]);
+
+      foreach($teacherAttendances as $teacherAttendance){
+        $teacherAttendancesId[] = $teacherAttendance->attendance_id;
+      }
+
+      return $teacherAttendancesId;
+    }
 }
